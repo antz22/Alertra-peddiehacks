@@ -65,7 +65,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'peddiehacks_2021.urls'
+ROOT_URLCONF = 'django_peddiehacks.urls'
 
 TEMPLATES = [
     {
@@ -83,7 +83,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'peddiehacks_2021.wsgi.application'
+WSGI_APPLICATION = 'django_peddiehacks.wsgi.application'
 
 
 AUTH_USER_MODEL = 'core.User'
