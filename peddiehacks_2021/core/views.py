@@ -43,6 +43,7 @@ class DummyModelList(APIView):
 def createDummyModel(request):
 
     data = request.data
+    user = request.user
 
     name = data['name']
     dummy_field = data['dummy_field']
