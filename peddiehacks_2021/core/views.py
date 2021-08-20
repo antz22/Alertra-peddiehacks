@@ -53,3 +53,20 @@ def createDummyModel(request):
 
 
     return Response(status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def imagePrediction(request):
+    data = request.data
+    strImagePath = data['strImagePath']
+
+    image_size = (150, 150)
+    strModelPath = 'C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\Image Recognition Experiment\\afhq_model-1629321815.json'
+    strWeightsPath = 'C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\Image Recognition Experiment\\afhq_model-1629321815.h5'
+    strDatasetPath = 'C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\Image Recognition Experiment\\afhq\\train'
+
+    objFinalModel = predicting.TrainedModel(strImagePath, image_size, strModelPath, strWeightsPath, strDatasetPath)
+    objFinalModel.fnLoadAndCompile()
+    return objFinalModel.fnPredict()
+
