@@ -9,6 +9,18 @@ from rest_framework.response import Response
 from .models import DummyModel
 from .serializers import DummyModelSerializer
 
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.models import model_from_json
+import numpy
+import os
+import sys
+sys.path.append('C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\PeddieHacks 2021\\peddiehacks_2021\\extras')
+import predicting
+
 
 
 def index(request):
@@ -40,4 +52,3 @@ def createDummyModel(request):
 
 
     return Response(status=status.HTTP_201_CREATED)
-
