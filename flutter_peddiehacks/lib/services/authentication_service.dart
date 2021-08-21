@@ -68,7 +68,7 @@ class AuthenticationService with ChangeNotifier {
   }
 
   Future<Map<String, dynamic>> signIn(String username, String password) async {
-    final headers = {"Content-Type": "application/json"};
+    var headers = {"Content-Type": "application/json"};
     var url = Uri.parse(API_BASE_URL + '/api/v1/token/login/');
     final body = json.encode({
       'username': username,
@@ -85,6 +85,10 @@ class AuthenticationService with ChangeNotifier {
       final storage = new FlutterSecureStorage();
       await storage.write(key: 'restAPI', value: token);
 
+      headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Token " + token
+      };
       url = Uri.parse(API_BASE_URL + '/api/v1/get-user-data/');
       response = await http.get(url, headers: headers);
       Map data = json.decode(response.body);
@@ -126,5 +130,15 @@ class AuthenticationService with ChangeNotifier {
       'body': json.decode(response.body),
     };
     return responseData;
+  }
+
+  Future<String> signOut() async {
+    final storage = new FlutterSecureStorage();
+    await storage.deleteAll();
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+
+    return 'Signed Out';
   }
 }

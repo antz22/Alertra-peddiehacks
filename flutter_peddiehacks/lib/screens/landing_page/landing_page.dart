@@ -55,7 +55,7 @@ class LandingPage extends StatelessWidget {
                 builder: (context) => LoginScreen(),
               ),
             ),
-            child: CustomButton(purpose: 'other', text: 'LOGIN'),
+            child: CustomButton(purpose: 'other', text: 'LOGIN', fit: 'normal'),
           ),
           SizedBox(height: 1.5 * kDefaultPadding),
           GestureDetector(

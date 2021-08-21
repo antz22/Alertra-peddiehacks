@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Report, ReportSearchResult, ReportType, Alert, School
-from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer
+from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer, UserDataSerializer
 
 import numpy as np 
 import pandas as pd 
@@ -80,25 +80,29 @@ class AlertList(APIView):
 
 #webscraper function to find report search results
 def webscrape(town, incident):
-	os.environ['MOZ_HEADLESS'] = '1'
-	driver = webdriver.Firefox()
+    # os.environ['MOZ_HEADLESS'] = '1'
+    driver = webdriver.Firefox()
 
-	# driver = webdriver.PhantomJS('C:\Users\Prineet Singh\Desktop\searchschoolandincident\phantomjs-1.9.7-windows\phantomjs.exe')
+    # driver = webdriver.PhantomJS('C:\Users\Prineet Singh\Desktop\searchschoolandincident\phantomjs-1.9.7-windows\phantomjs.exe')
 
-	driver.get("google.com")
-	driver.find_element_by_xpath('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(town + incident)  # class is a4bIc
-	
-	results = driver.find_elements_by_css_selector('div.g')
-	link1 = results[0].find_element_by_tag_name("a")
-	link2 = results[1].find_element_by_tag_name("a")
-	link3 = results[2].find_element_by_tag_name("a")
-	href1 = link1.get_attribute("href")
-	href2 = link2.get_attribute("href")
-	href3 = link3.get_attribute("href")
+    driver.get("https://www.google.com/")
+    driver.find_element_by_xpath('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(town + ' ' + incident + Keys.ENTER)
+    
+    # results = driver.find_elements_by_css_selector('div.g')
+    results = driver.find_elements_by_xpath("//div[@class='g']//div[@class='r']//a[not(@class)]");
+    for result in results:
+        print(result.get_attribute("href"))
+    # print(results)
+    link1 = results[0].find_element_by_tag_name("a")
+    link2 = results[1].find_element_by_tag_name("a")
+    link3 = results[2].find_element_by_tag_name("a")
+    href1 = link1.get_attribute("href")
+    href2 = link2.get_attribute("href")
+    href3 = link3.get_attribute("href")
 
-	driver.close()
+    driver.close()
 
-	return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
+    return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
 
 #function to create csv datasets with search headlines for kmeans clustering
 def createData(filePath, headlines):
@@ -121,8 +125,9 @@ def createUser(request):
     role = data['role']
     school = data['school']
 
-    user.school = school
+    user.school = School.objects.get(name=school)
     user.role = role
+    user.save()
 
     return Response(status=status.HTTP_200_OK)
 
@@ -136,7 +141,7 @@ def getUserData(request):
 
     return Response({
         'role': user.role,
-        'school': user.school,
+        'school': user.school.name,
     })
 
 
@@ -169,7 +174,11 @@ def createReport(request):
     # new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, priority=priority, picture=picture, school=school)
     new_report.save()
     
-    url1, url2, url3 = webscrape(school.city, report_type)
+    try:
+        url1, url2, url3 = webscrape(school.city, report_type)
+    except: 
+        url1, url2, url3 = webscrape(school.city, description)
+
     new_search1 = ReportSearchResult.objects.create(report=new_report.id, url=url1)
     new_search1.save()
     new_search2 = ReportSearchResult.objects.create(report=new_report.id, url=url2)

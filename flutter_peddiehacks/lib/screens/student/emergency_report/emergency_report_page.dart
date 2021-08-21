@@ -13,28 +13,35 @@ class EmergencyReportPage extends StatefulWidget {
 }
 
 class _EmergencyReportPageState extends State<EmergencyReportPage> {
-  String dropdownValue = 'One';
-  List<String> items = ['One', 'Two', 'Three'];
+  String dropdownValue = '';
+  List<String> items = new List.from([]);
 
-  Future<List<String>> _retrieveReportTypes() async {
-    List<String> reportTypes =
-        await context.read<APIServices>().retrieveReportTypes();
-    return reportTypes;
+  Future<String> _retrieveReportTypes() async {
+    try {
+      List<String> reportTypes =
+          await context.read<APIServices>().retrieveReportTypes();
+      items = reportTypes;
+      dropdownValue = items[0];
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: null,
-        builder: (context, snapshot) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Emergency Report'),
-              backgroundColor: kRedWarningColor,
-            ),
-            body: Container(
-              padding: EdgeInsets.all(kDefaultPadding),
-              child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Emergency Report'),
+        backgroundColor: kRedWarningColor,
+      ),
+      body: Container(
+        padding: EdgeInsets.all(kDefaultPadding),
+        child: FutureBuilder(
+          future: _retrieveReportTypes(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data == 'Success') {
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -55,14 +62,22 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
                         await context
                             .read<APIServices>()
                             .createReport('', '', '', dropdownValue, true);
+
+                        Navigator.pop(context);
                       },
                       child: CustomButton(purpose: 'warning', text: 'REPORT'),
                     ),
-                  )
+                  ),
                 ],
-              ),
-            ),
-          );
-        });
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+      ),
+    );
   }
 }

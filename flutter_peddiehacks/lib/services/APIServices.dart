@@ -22,7 +22,6 @@ class APIServices {
     final response = await http.get(url, headers: headers);
     List<dynamic> data = json.decode(response.body);
     List<Alert> alerts = data.map((alert) => Alert.fromJson(alert)).toList();
-    print(alerts);
     return alerts;
   }
 
@@ -50,7 +49,10 @@ class APIServices {
     };
     final url = Uri.parse(API_BASE_URL + '/api/v1/get-report-types/');
     final response = await http.get(url, headers: headers);
-    List<String> data = json.decode(response.body);
+    List<dynamic> jsonData = json.decode(response.body);
+    List<String> data = jsonData.map((vals) {
+      return vals['name'].toString();
+    }).toList();
     return data;
   }
 

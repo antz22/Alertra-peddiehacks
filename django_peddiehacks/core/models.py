@@ -13,7 +13,7 @@ class School(models.Model):
 
 class User(AbstractUser):
     # teacher, student
-    role = models.CharField(max_length=64, null=True, blank=True),
+    role = models.CharField(max_length=64, null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
 
 

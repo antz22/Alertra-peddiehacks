@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_peddiehacks/screens/student/home/student_home_page.dart';
 import 'package:flutter_peddiehacks/widgets/custom_dropdown.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_peddiehacks/constants/constants.dart';
@@ -29,8 +30,12 @@ class _NewReportPageState extends State<NewReportPage> {
         backgroundColor: kPrimaryColor,
       ),
       body: Padding(
-        padding: EdgeInsets.all(kDefaultPadding),
-        child: Column(
+        padding: EdgeInsets.only(
+            top: kDefaultPadding,
+            left: kDefaultPadding,
+            right: kDefaultPadding),
+        child: ListView(
+          shrinkWrap: true,
           children: [
             ListView(
               shrinkWrap: true,
@@ -71,7 +76,7 @@ class _NewReportPageState extends State<NewReportPage> {
                 CustomDropdown(dropdownValue: dropdownValue, items: items)
               ],
             ),
-            Spacer(),
+            SizedBox(height: 3 * kDefaultPadding),
             GestureDetector(
               onTap: () async {
                 await context.read<APIServices>().createReport(
@@ -80,6 +85,7 @@ class _NewReportPageState extends State<NewReportPage> {
                     severityController.text,
                     '',
                     false);
+                Navigator.pop(context);
               },
               child: CustomButton(purpose: 'other', text: 'REPORT'),
             ),
