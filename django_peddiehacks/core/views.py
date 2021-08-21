@@ -6,20 +6,20 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import DummyModel
-from .serializers import DummyModelSerializer
+from .models import Report, ReportType, Alert
+from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer
 
-import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.models import model_from_json
-import numpy
-import os
-import sys
-sys.path.append('C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\PeddieHacks 2021\\peddiehacks_2021\\extras')
-import predicting
+# import tensorflow as tf
+# from tensorflow import keras
+# from tensorflow.keras import layers
+# from keras.models import Sequential
+# from keras.layers import Dense
+# from keras.models import model_from_json
+# import numpy
+# import os
+# import sys
+# sys.path.append('C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\PeddieHacks 2021\\peddiehacks_2021\\extras')
+# import predicting
 
 
 
@@ -27,33 +27,76 @@ def index(request):
     pass
 
 
-class DummyModelList(APIView):
+class ReportList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        dummy_models = DummyModel.objects.filter(user=request.user)
-        serializer = DummyModelSerializer(dummy_models, many=True)
+        reports = Report.objects.filter(user=request.user)
+        serializer = ReportSerializer(reports, many=True)
+        return Response(serializer.data)
+
+class ReportTypeList(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        report_types = ReportType.objects.filter(user=request.user)
+        serializer = ReportTypeSerializer(report_types, many=True)
+        return Response(serializer.data)
+
+class AlertList(APIView):
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        alerts = Alert.objects.filter(user=request.user)
+        serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
 
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
-def createDummyModel(request):
+def createReport(request):
 
     data = request.data
     user = request.user
 
-    name = data['name']
-    dummy_field = data['dummy_field']
+    description = data['description']
+    location = data['location']
+    report_type_name = data['report_type_name']
+    report_type = ReportType.objects.get(name=report_type_name)
+    severity = data['severity']
+    picture = data['picture']
 
-    new_dummy_model = DummyModel.objects.create(user=user, name=name, dummy_field=dummy_field)
-    new_dummy_model.save()
+
+    new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, severity=severity, picture=picture)
+    new_report.save()
 
 
     return Response(status=status.HTTP_201_CREATED)
 
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def createAlert(request):
+
+    data = request.data
+    user = request.user
+
+    head_line = data['head_line']
+    content = data['content']
+    recipient = data['recipient']
+
+
+    new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient=recipient)
+    new_alert.save()
+
+
+    return Response(status=status.HTTP_201_CREATED)
+
+'''
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -69,4 +112,4 @@ def imagePrediction(request):
     objFinalModel = predicting.TrainedModel(strImagePath, image_size, strModelPath, strWeightsPath, strDatasetPath)
     objFinalModel.fnLoadAndCompile()
     return objFinalModel.fnPredict()
-
+'''
