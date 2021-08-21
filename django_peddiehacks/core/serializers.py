@@ -21,7 +21,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'location',
             'report_type_name',
             'severity',
-            'picture',
+            'get_picture',
             'school_name',
             'time',
             'isEmergency',
