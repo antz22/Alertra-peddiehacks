@@ -23,6 +23,8 @@ class ReportSerializer(serializers.ModelSerializer):
             'severity',
             'picture',
             'school_name',
+            'time',
+            'isEmergency',
         )
 
 class ReportSearchResultSerializer(serializers.ModelSerializer):
@@ -41,18 +43,10 @@ class AlertSerializer(serializers.ModelSerializer):
         model = Alert
         fields = (
             'id',
+            'priority',
             'head_line',
             'content',
             'recipient',
             'school_name',
-        )
-
-class SchoolSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = School
-        fields = (
-            'id',
-            'name',
-            'address',
-            'city'
+            'time',
         )

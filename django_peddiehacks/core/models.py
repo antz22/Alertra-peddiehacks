@@ -10,8 +10,8 @@ class School(models.Model):
 
 class User(AbstractUser):
     # teacher, student
-    role = models.CharField(max_length=64),
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    role = models.CharField(max_length=64, null=True, blank=True),
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
 
 
 class ReportType(models.Model):
@@ -28,8 +28,7 @@ class Report(models.Model):
     picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     isEmergency = models.BooleanField(default=False)
-    time = models.DateTimeField(auto_now_add=True)
-    isEmergency = models.BooleanField(default=False)
+    time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 
 class ReportSearchResult(models.Model):
@@ -46,6 +45,6 @@ class Alert(models.Model):
     # teacher, student, all
     recipient = models.CharField(max_length=64)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     linked_report = models.ForeignKey(Report, on_delete=models.CASCADE, null=True, blank=True)
 

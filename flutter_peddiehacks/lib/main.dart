@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_peddiehacks/screens/student/home/student_home_page.dart';
+import 'package:flutter_peddiehacks/screens/teacher/home/teacher_home_page.dart';
+import 'package:flutter_peddiehacks/services/APIServices.dart';
 import 'package:flutter_peddiehacks/services/authentication_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-import 'screens/home/home_page.dart';
 import 'screens/landing_page/landing_page.dart';
 
 void main() {
@@ -22,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthenticationService()),
+        Provider(create: (context) => APIServices()),
         // Provider(create: (context) => APIServices()),
       ],
       child: MaterialApp(
@@ -34,12 +38,16 @@ class MyApp extends StatelessWidget {
 }
 
 class AuthenticationWrapper extends StatelessWidget {
-  const AuthenticationWrapper({Key? key}) : super(key: key);
+  AuthenticationWrapper({Key? key, this.role = ''}) : super(key: key);
+
+  String? role;
 
   Future<bool> _retrieveToken() async {
     final storage = new FlutterSecureStorage();
     String? token = await storage.read(key: 'restAPI');
     if (token != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      role = await prefs.getString('role');
       return true;
     } else {
       return false;
@@ -52,7 +60,17 @@ class AuthenticationWrapper extends StatelessWidget {
       future: _retrieveToken(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (snapshot.hasData) {
-          return snapshot.data! ? HomePage() : LandingPage();
+          if (snapshot.data!) {
+            if (role == 'Student') {
+              return StudentHomePage();
+            } else if (role == 'Teacher') {
+              return TeacherHomePage();
+            } else {
+              return LandingPage();
+            }
+          } else {
+            return LandingPage();
+          }
         } else {
           return Center(child: CircularProgressIndicator());
         }

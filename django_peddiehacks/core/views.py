@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Report, ReportSearchResult, ReportType, Alert, School
-from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer, SchoolSerializer, ReportSearchResultSerializer
+from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer
 
 # import tensorflow as tf
 # from tensorflow import keras
@@ -74,19 +74,10 @@ class AlertList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        alerts = Alert.objects.filter(recipient=request.user.role)
+        # alerts = Alert.objects.filter(recipient=request.user.role)
+        alerts = Alert.objects.all()
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
-
-
-# class SchoolList(APIView):
-#     authentication_classes = [authentication.TokenAuthentication]
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request, format=None):
-#         schools = School.objects.filter(user=request.user)
-#         serializer = SchoolSerializer(schools, many=True)
-#         return Response(serializer.data)
 
 
 def webscrape(town, incident):
@@ -110,6 +101,36 @@ def webscrape(town, incident):
 
 	return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
 
+
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def createUser(request):
+
+    data = request.data
+    user = request.user
+
+    role = data['role']
+    school = data['school']
+
+    user.school = school
+    user.role = role
+
+    return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def getUserData(request):
+
+    user = request.user
+
+    return Response({
+        'role': user.role,
+        'school': user.school,
+    })
 
 
 @api_view(['POST'])

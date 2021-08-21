@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-3ueu^%s!jb4jov)^vwi@63p0$%+)=tz%(xxj$om=i(n^)4nnku
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -128,7 +128,9 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+DATETIME_FORMAT = '&d %m, %Y %H:%M%p'
+
+USE_L10N = False
 
 USE_TZ = True
 
