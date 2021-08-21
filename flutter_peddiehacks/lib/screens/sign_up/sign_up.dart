@@ -95,8 +95,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Spacer(),
           GestureDetector(
-              onTap: () => _register(),
-              child: CustomButton(purpose: 'other', text: 'REGISTER')),
+            onTap: () => _register(),
+            child:
+                CustomButton(purpose: 'other', text: 'REGISTER', fit: 'normal'),
+          ),
           Spacer(),
         ],
       ),

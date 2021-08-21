@@ -41,24 +41,63 @@ class APIServices {
     return reports;
   }
 
-  Future<String> createAlert(String filename, Map<String, dynamic> body) async {
+  Future<List<String>> retrieveReportTypes() async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
-    var request = http.MultipartRequest(
-        'POST', Uri.parse(API_BASE_URL + '/api/v1/create-listing/'));
-    request.headers['Authorization'] = "Token " + token!;
-    request.headers['Content-Type'] = "application/json";
-    request.fields['name'] = body['name'];
-    request.fields['description'] = body['desc'];
-    request.fields['price'] = body['price'];
-    request.fields['amount'] = body['amount'];
-    request.files.add(
-      await http.MultipartFile.fromPath(
-        'image',
-        filename,
-      ),
-    );
-    var result = await request.send();
-    return result.reasonPhrase!;
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/get-report-types/');
+    final response = await http.get(url, headers: headers);
+    List<String> data = json.decode(response.body);
+    return data;
+  }
+
+  // Future<String> createReport(String filename, Map<String, dynamic> body) async {
+  //   final storage = new FlutterSecureStorage();
+  //   final token = await storage.read(key: 'restAPI');
+  //   var request = http.MultipartRequest(
+  //       'POST', Uri.parse(API_BASE_URL + '/api/v1/create-listing/'));
+  //   request.headers['Authorization'] = "Token " + token!;
+  //   request.headers['Content-Type'] = "application/json";
+  //   request.fields['name'] = body['name'];
+  //   request.fields['description'] = body['desc'];
+  //   request.fields['price'] = body['price'];
+  //   request.fields['amount'] = body['amount'];
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath(
+  //       'image',
+  //       filename,
+  //     ),
+  //   );
+  //   var result = await request.send();
+  //   return result.reasonPhrase!;
+  // }
+  Future<String> createReport(String description, String location,
+      String priority, String report_type_name, bool isEmergency) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/create-report/');
+    final body = isEmergency
+        ? json.encode({
+            'severity': 'high',
+            'report_type_name': report_type_name,
+          })
+        : json.encode({
+            'description': description,
+            'location': location,
+            'priority': priority.toLowerCase(),
+          });
+    try {
+      await http.post(url, headers: headers, body: body);
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
   }
 }

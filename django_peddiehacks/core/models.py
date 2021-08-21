@@ -7,6 +7,9 @@ class School(models.Model):
     address = models.CharField(max_length=128)
     city = models.CharField(max_length=128)
 
+    def __str__(self):
+        return f"{self.name}"
+
 
 class User(AbstractUser):
     # teacher, student
@@ -16,6 +19,9 @@ class User(AbstractUser):
 
 class ReportType(models.Model):
     name = models.CharField(max_length=128)
+
+    def __str__(self):
+        return f"{self.name}"
 
 
 class Report(models.Model):
@@ -27,8 +33,10 @@ class Report(models.Model):
     priority = models.CharField(max_length=64, default='low')
     picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    isEmergency = models.BooleanField(default=False)
     time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.priority} priority report"
 
 
 class ReportSearchResult(models.Model):
@@ -48,3 +56,5 @@ class Alert(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     linked_report = models.ForeignKey(Report, on_delete=models.CASCADE, null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.head_line}"

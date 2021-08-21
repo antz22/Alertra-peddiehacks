@@ -6,10 +6,12 @@ class CustomButton extends StatelessWidget {
     Key? key,
     required this.purpose,
     required this.text,
+    this.fit = 'fill',
   }) : super(key: key);
 
   final String purpose;
   final String text;
+  final String fit;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,9 @@ class CustomButton extends StatelessWidget {
           kBoxShadow(),
         ],
       ),
-      width: MediaQuery.of(context).size.width - 5 * kDefaultPadding,
+      width: fit == 'fill'
+          ? MediaQuery.of(context).size.width - 2 * kDefaultPadding
+          : MediaQuery.of(context).size.width - 5 * kDefaultPadding,
       height: 52.0,
       child: Center(
         child: Text(

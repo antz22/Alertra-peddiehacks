@@ -81,7 +81,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           GestureDetector(
             onTap: () => _signIn(),
-            child: CustomButton(purpose: 'other', text: 'LOGIN'),
+            child: CustomButton(purpose: 'other', text: 'LOGIN', fit: 'normal'),
           ),
           SizedBox(height: kDefaultPadding),
           GestureDetector(

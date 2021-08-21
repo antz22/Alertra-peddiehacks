@@ -140,17 +140,26 @@ def createReport(request):
 
     data = request.data
     user = request.user
+    school = user.school
 
-    description = data['description']
-    location = data['location']
-    report_type_name = data['report_type_name']
-    report_type = ReportType.objects.get(name=report_type_name)
-    priority = data['priority']
-    picture = data['picture']
-    school_name = data['school_name']
-    school = School.objects.get(name=school_name)
+    try:
+        # see if the report has the 'description'
+        description = data['description']
+        location = data['location']
+        priority = data['priority']
 
-    new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, priority=priority, picture=picture, school=school)
+        new_report = Report.objects.create(user=user, description=description, location=location, priority=priority, school=school)
+    except: 
+        # if it doesn't it is an emergency report with only the report type and a default of high priority
+        report_type_name = data['report_type_name']
+        report_type = ReportType.objects.get(name=report_type_name)
+        priority = 'high'
+
+        new_report = Report.objects.create(user=user, report_type=report_type, priority=priority, school=school)
+
+    # picture = data['picture']
+
+    # new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, priority=priority, picture=picture, school=school)
     new_report.save()
     
     url1, url2, url3 = webscrape(school.city, report_type)
