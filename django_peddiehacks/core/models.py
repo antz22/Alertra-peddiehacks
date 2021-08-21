@@ -39,8 +39,8 @@ class Report(models.Model):
         return f"{self.priority} priority report"
 
     def get_picture(self):
-        if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
+        if self.picture:
+            return 'http://127.0.0.1:8000' + self.picture.url
         return ''
 
 
