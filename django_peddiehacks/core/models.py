@@ -38,6 +38,11 @@ class Report(models.Model):
     def __str__(self):
         return f"{self.priority} priority report"
 
+    def get_picture(self):
+        if self.picture:
+            return 'http://127.0.0.1:8000' + self.picture.url
+        return ''
+
 
 class ReportSearchResult(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='search_results')

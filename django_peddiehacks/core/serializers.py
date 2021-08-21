@@ -31,7 +31,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'location',
             'report_type_name',
             'priority',
-            'picture',
+            'get_picture',
             'school_name',
             'time',
         )
