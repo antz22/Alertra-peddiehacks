@@ -6,7 +6,10 @@ urlpatterns = [
     path('', views.index),
 	path('get-reports/', views.ReportList.as_view()),
 	path('get-report-types/', views.ReportTypeList.as_view()),
+    path('get-report-search-result/', views.ReportSearchResultList.as_view()),
 	path('get-alerts/', views.AlertList.as_view()),
+    path('get-schools/', views.SchoolList.as_view()),
     path('create-report/', views.createReport),
     path('create-alert/', views.createAlert),
+    path('create-school/', views.createSchool),
 ]

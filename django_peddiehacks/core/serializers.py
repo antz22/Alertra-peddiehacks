@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Report, ReportType, Alert
+from .models import Report, ReportType, Alert, School, ReportSearchResult
 
 class ReportTypeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +12,7 @@ class ReportTypeSerializer(serializers.ModelSerializer):
 
 class ReportSerializer(serializers.ModelSerializer):
     report_type_name = serializers.CharField(source='report_type.name')
+    school_name = serializers.CharField(source='school.name')
     class Meta:
         model = Report
         fields = (
@@ -21,9 +22,21 @@ class ReportSerializer(serializers.ModelSerializer):
             'report_type_name',
             'severity',
             'picture',
+            'school_name'
+        )
+
+class ReportSearchResultSerializer(serializers.ModelSerializer):
+    report_name = serializers.CharField(source='report.name')
+    class Meta:
+        model = ReportSearchResult
+        fields = (
+            'id',
+            'report_name',
+            'url',
         )
 
 class AlertSerializer(serializers.ModelSerializer):
+    school_name = serializers.CharField(source='school.name')
     class Meta:
         model = Alert
         fields = (
@@ -31,4 +44,15 @@ class AlertSerializer(serializers.ModelSerializer):
             'head_line',
             'content',
             'recipient',
+            'school_name',
+        )
+
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = (
+            'id',
+            'name',
+            'address',
+            'city'
         )
