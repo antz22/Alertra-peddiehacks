@@ -3,3 +3,5 @@ django-rest-framework
 django-cors-headers
 djoser
 pillow
+selenium
+urlparse

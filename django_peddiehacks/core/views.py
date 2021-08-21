@@ -44,45 +44,49 @@ class ReportList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        reports = Report.objects.filter(user=request.user)
+        reports = Report.objects.all()
         serializer = ReportSerializer(reports, many=True)
         return Response(serializer.data)
+
 
 class ReportTypeList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        report_types = ReportType.objects.filter(user=request.user)
+        report_types = ReportType.objects.all()
         serializer = ReportTypeSerializer(report_types, many=True)
         return Response(serializer.data)
 
-class ReportSearchResultList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, format=None):
-        report_search_results = ReportSearchResult.objects.filter(user=request.user)
-        serializer = ReportSearchResultSerializer(report_search_results, many=True)
-        return Response(serializer.data)
+# class ReportSearchResultList(APIView):
+#     authentication_classes = [authentication.TokenAuthentication]
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get(self, request, format=None):
+#         report_search_results = ReportSearchResult.objects.filter(user=request.user)
+#         serializer = ReportSearchResultSerializer(report_search_results, many=True)
+#         return Response(serializer.data)
+
 
 class AlertList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        alerts = Alert.objects.filter(user=request.user)
+        alerts = Alert.objects.filter(recipient=request.user.role)
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
-class SchoolList(APIView):
-    authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, format=None):
-        schools = School.objects.filter(user=request.user)
-        serializer = SchoolSerializer(schools, many=True)
-        return Response(serializer.data)
+# class SchoolList(APIView):
+#     authentication_classes = [authentication.TokenAuthentication]
+#     permission_classes = [permissions.IsAuthenticated]
+
+#     def get(self, request, format=None):
+#         schools = School.objects.filter(user=request.user)
+#         serializer = SchoolSerializer(schools, many=True)
+#         return Response(serializer.data)
 
 
 def webscrape(town, incident):
@@ -120,15 +124,13 @@ def createReport(request):
     location = data['location']
     report_type_name = data['report_type_name']
     report_type = ReportType.objects.get(name=report_type_name)
-    severity = data['severity']
+    priority = data['priority']
     picture = data['picture']
     school_name = data['school_name']
     school = School.objects.get(name=school_name)
 
-
-    new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, severity=severity, picture=picture, school=school)
+    new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, priority=priority, picture=picture, school=school)
     new_report.save()
-
     
     url1, url2, url3 = webscrape(school.city, report_type)
     new_search1 = ReportSearchResult.objects.create(report=new_report.id, url=url1)
@@ -137,9 +139,13 @@ def createReport(request):
     new_search2.save()
     new_search3 = ReportSearchResult.objects.create(report=new_report.id, url=url3)
     new_search3.save()
-    # qstSearches = ReportSearchResults.objects.filter(report=new_report.id)
+
+
+    # qstSearches = new_report.search_results
+    # serializer = ReportSearchResultSerializer(qstSearches, many=True)
 
     return Response(status=status.HTTP_201_CREATED)
+
 
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -162,6 +168,10 @@ def createAlert(request):
 
     return Response(status=status.HTTP_201_CREATED)
 
+
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
 def createSchool(request):
 
     data = request.data

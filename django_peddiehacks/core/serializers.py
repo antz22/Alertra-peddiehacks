@@ -22,7 +22,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'report_type_name',
             'severity',
             'picture',
-            'school_name'
+            'school_name',
         )
 
 class ReportSearchResultSerializer(serializers.ModelSerializer):
