@@ -14,6 +14,7 @@ class ReportInfoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(report.picture_url);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
@@ -78,14 +79,20 @@ class ReportInfoScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: kDefaultPadding),
-            Text(
-              'Picture:',
-              style: TextStyle(
-                fontSize: 17.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: kDefaultPadding),
+            report.picture_url != ''
+                ? Row(
+                    children: [
+                      Text(
+                        'Picture:',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: kDefaultPadding),
+                    ],
+                  )
+                : SizedBox.shrink(),
             Text(
               'Matching Search Results:',
               style: TextStyle(
@@ -170,8 +177,18 @@ class ReportInfoScreen extends StatelessWidget {
                           ),
                         ],
                       )
-                    : Center(
-                        child: Icon(Icons.check),
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Approved',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Icon(Icons.check, color: Colors.green),
+                        ],
                       )
                 : SizedBox.shrink(),
           ],

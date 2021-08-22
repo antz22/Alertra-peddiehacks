@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_peddiehacks/widgets/custom_dropdown.dart';
+import 'package:flutter_peddiehacks/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/services/APIServices.dart';
@@ -13,6 +14,7 @@ class EmergencyReportPage extends StatefulWidget {
 }
 
 class _EmergencyReportPageState extends State<EmergencyReportPage> {
+  final descController = new TextEditingController();
   String dropdownValue = '';
   List<String> items = new List.from([]);
 
@@ -55,13 +57,30 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
                   SizedBox(height: 2 * kDefaultPadding),
                   Text('What is the type of your emergency?'),
                   CustomDropdown(dropdownValue: dropdownValue, items: items),
+                  SizedBox(height: 1.5 * kDefaultPadding),
+                  Text(
+                    'Describe the incident you wish to report.',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 0.7 * kDefaultPadding),
+                  CustomTextField(
+                      controller: descController,
+                      hintText: 'Description',
+                      verbose: true),
                   Spacer(),
                   Center(
                     child: GestureDetector(
                       onTap: () async {
-                        await context
-                            .read<APIServices>()
-                            .createReport('', '', '', dropdownValue, true);
+                        await context.read<APIServices>().createReport(
+                            descController.text,
+                            '',
+                            'high',
+                            dropdownValue,
+                            '',
+                            true);
 
                         Navigator.pop(context);
                       },

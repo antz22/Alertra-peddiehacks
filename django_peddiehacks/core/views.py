@@ -86,22 +86,42 @@ def webscrape(town, incident):
 
     driver.get("https://www.google.com/")
     driver.find_element_by_xpath('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(town + ' ' + incident + Keys.ENTER)
+
+    # driver.
     
-    # results = driver.find_elements_by_css_selector('div.g')
-    results = driver.find_elements_by_xpath("//div[@class='g']//div[@class='r']//a[not(@class)]");
-    for result in results:
-        print(result.get_attribute("href"))
-    # print(results)
-    link1 = results[0].find_element_by_tag_name("a")
-    link2 = results[1].find_element_by_tag_name("a")
-    link3 = results[2].find_element_by_tag_name("a")
+    # # results = driver.find_elements_by_css_selector('div.g')
+    # results = driver.find_elements_by_xpath("//div[@class='g']//div[@class='r']//a[not(@class)]");
+    # for result in results:
+    #     print(result.get_attribute("href"))
+    # # print(results)
+    # link1 = results[0].find_element_by_tag_name("a")
+    # link2 = results[1].find_element_by_tag_name("a")
+    # link3 = results[2].find_element_by_tag_name("a")
+    # href1 = link1.get_attribute("href")
+    # href2 = link2.get_attribute("href")
+    # href3 = link3.get_attribute("href")
+
+    driver.implicitly_wait(20)
+
+    allLinks = driver.find_elements_by_class_name('yuRUbf')
+    # href1= allLinks[0].get_attribute('href')
+    # href2 = allLinks[1].get_attribute('href')
+    # href3 = allLinks[2].get_attribute('href')
+    link1 = allLinks[0].find_element_by_tag_name("a")
+    link2 = allLinks[1].find_element_by_tag_name("a")
+    link3 = allLinks[2].find_element_by_tag_name("a")
     href1 = link1.get_attribute("href")
     href2 = link2.get_attribute("href")
     href3 = link3.get_attribute("href")
 
     driver.close()
 
-    return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
+    # print(urlparse.parse_qs(urlparse.urlparse(href1).query)["q"])
+    print(href1, href2, href3)
+    print(allLinks)
+
+    # return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
+    return (href1, href2, href3)
 
 #function to create csv datasets with search headlines for kmeans clustering
 def createData(filePath, headlines):
@@ -142,6 +162,7 @@ def getUserData(request):
     return Response({
         'role': user.role,
         'school': user.school.name,
+        'username': user.username,
     })
 
 
@@ -157,22 +178,25 @@ def createReport(request):
 
     try:
         # see if the report has the 'description'
-        description = data['description']
         location = data['location']
         priority = data['priority']
+        description = data['description']
+        report_type_name = data['report_type_name']
+        report_type = ReportType.objects.get(name=report_type_name)
 
-        new_report = Report.objects.create(user=user, description=description, location=location, priority=priority, school=school)
+        new_report = Report.objects.create(user=user, description=description, location=location, priority=priority, school=school, report_type=report_type)
     except: 
         # if it doesn't it is an emergency report with only the report type and a default of high priority
+        description = data['description']
         report_type_name = data['report_type_name']
         report_type = ReportType.objects.get(name=report_type_name)
         priority = 'high'
+        picture = data['picture']
+        print(picture)
 
-        new_report = Report.objects.create(user=user, report_type=report_type, priority=priority, school=school)
+        new_report = Report.objects.create(user=user, report_type=report_type, priority=priority, school=school, description=description, picture=picture)
 
-    # picture = data['picture']
 
-    # new_report = Report.objects.create(user=user, description=description, location=location, report_type=report_type, priority=priority, picture=picture, school=school)
     new_report.save()
     
     try:
@@ -180,11 +204,11 @@ def createReport(request):
     except: 
         url1, url2, url3 = webscrape(school.city, description)
 
-    new_search1 = ReportSearchResult.objects.create(report=new_report.id, url=url1)
+    new_search1 = ReportSearchResult.objects.create(report=new_report, url=url1)
     new_search1.save()
-    new_search2 = ReportSearchResult.objects.create(report=new_report.id, url=url2)
+    new_search2 = ReportSearchResult.objects.create(report=new_report, url=url2)
     new_search2.save()
-    new_search3 = ReportSearchResult.objects.create(report=new_report.id, url=url3)
+    new_search3 = ReportSearchResult.objects.create(report=new_report, url=url3)
     new_search3.save()
 
 
