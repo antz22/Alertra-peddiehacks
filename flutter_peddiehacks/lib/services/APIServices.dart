@@ -77,30 +77,49 @@ class APIServices {
   //   var result = await request.send();
   //   return result.reasonPhrase!;
   // }
-  Future<String> createReport(String description, String location,
-      String priority, String report_type_name, bool isEmergency) async {
+  Future<String> createReport(
+      String description,
+      String location,
+      String priority,
+      String report_type_name,
+      String filename,
+      bool isEmergency) async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
-    final headers = {
-      "Content-Type": "application/json",
-      "Authorization": "Token " + token!
-    };
-    final url = Uri.parse(API_BASE_URL + '/api/v1/create-report/');
-    final body = isEmergency
-        ? json.encode({
-            'severity': 'high',
-            'report_type_name': report_type_name,
-          })
-        : json.encode({
-            'description': description,
-            'location': location,
-            'priority': priority.toLowerCase(),
-          });
-    try {
-      await http.post(url, headers: headers, body: body);
-      return 'Success';
-    } catch (e) {
-      return e.toString();
+    if (isEmergency) {
+      final headers = {
+        "Content-Type": "application/json",
+        "Authorization": "Token " + token!
+      };
+      final url = Uri.parse(API_BASE_URL + '/api/v1/create-report/');
+      final body = json.encode({
+        'priority': priority,
+        'report_type_name': report_type_name,
+        'description': description,
+      });
+      try {
+        await http.post(url, headers: headers, body: body);
+        return 'Success';
+      } catch (e) {
+        return e.toString();
+      }
+    } else {
+      var request = http.MultipartRequest(
+          'POST', Uri.parse(API_BASE_URL + '/api/v1/create-report/'));
+      request.headers['Authorization'] = "Token " + token!;
+      request.headers['Content-Type'] = "application/json";
+      request.fields['description'] = description;
+      request.fields['location'] = location;
+      request.fields['priority'] = priority;
+      request.fields['report_type_name'] = report_type_name;
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'picture',
+          filename,
+        ),
+      );
+      var result = await request.send();
+      return result.reasonPhrase!;
     }
   }
 

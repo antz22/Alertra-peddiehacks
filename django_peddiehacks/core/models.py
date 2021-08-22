@@ -36,13 +36,17 @@ class Report(models.Model):
     time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     approved = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ('-time',)
+
     def __str__(self):
         return f"{self.priority} priority report"
 
     def get_picture(self):
         if self.picture:
-            return 'http://127.0.0.1:8000' + self.picture.url
+            return 'http://10.0.2.2:5000' + self.picture.url
         return ''
+    
 
 #Search results that may corroborate with a report
 class ReportSearchResult(models.Model):

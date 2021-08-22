@@ -94,10 +94,13 @@ class AuthenticationService with ChangeNotifier {
       Map data = json.decode(response.body);
       String role = data['role'];
       String school = data['school'];
+      String name = data['username'];
+      print(role + school + name);
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       prefs.setString('role', role);
       prefs.setString('school', school);
+      prefs.setString('username', name);
     }
     Map<String, dynamic> responseData = {
       'statusCode': response.statusCode.toString(),

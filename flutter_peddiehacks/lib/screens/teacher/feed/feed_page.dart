@@ -3,7 +3,7 @@ import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/models/alert.dart';
 import 'package:flutter_peddiehacks/models/report.dart';
 import 'package:flutter_peddiehacks/screens/alert_info/alert_info_screen.dart';
-import 'package:flutter_peddiehacks/screens/report_ifno/report_info_screen.dart';
+import 'package:flutter_peddiehacks/screens/report_info/report_info_screen.dart';
 import 'package:flutter_peddiehacks/widgets/page_banner.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +39,6 @@ class _FeedPageState extends State<FeedPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Today',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0,
-                  ),
-                ),
                 FutureBuilder(
                   future: _loadFeed(),
                   builder: (BuildContext context,
@@ -56,8 +49,15 @@ class _FeedPageState extends State<FeedPage> {
                       List<Report> reports =
                           snapshot.data?['reports'] as List<Report>;
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Alerts'),
+                          Text(
+                            'Alerts',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          ),
                           ListView.builder(
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,
@@ -129,7 +129,14 @@ class _FeedPageState extends State<FeedPage> {
                               );
                             },
                           ),
-                          Text('Reports'),
+                          SizedBox(height: 1.5 * kDefaultPadding),
+                          Text(
+                            'Reports',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          ),
                           ListView.builder(
                             scrollDirection: Axis.vertical,
                             shrinkWrap: true,

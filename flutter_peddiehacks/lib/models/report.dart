@@ -7,6 +7,7 @@ class Report {
   final String description;
   final String location;
   final String report_type;
+  final String picture_url;
 
   Report({
     required this.id,
@@ -17,6 +18,7 @@ class Report {
     this.description = '',
     this.location = '',
     this.report_type = '',
+    this.picture_url = '',
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Report {
       description: json['description'],
       location: json['location'],
       report_type: json['report_type_name'],
+      picture_url: json['get_picture'],
     );
   }
 }
