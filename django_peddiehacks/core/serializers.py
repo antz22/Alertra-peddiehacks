@@ -1,9 +1,30 @@
 from rest_framework import serializers
 
-from .models import Report, ReportType, Alert, ReportSearchResult, User, School
+from .models import Report, ReportType, Alert, ReportSearchResult, User, School, KeyWord, Source
 
+
+class KeyWordSerializer(serializers.Serializer):
+    school_id = serializers.CharField(source='school.id')
+    class Meta:
+        model = KeyWord
+        fields = (
+            'id',
+            'key_word',
+        )
+
+
+class SourceSerializer(serializers.Serializer):
+    school_id = serializers.CharField(source='school.id')
+    class Meta:
+        model = KeyWord
+        fields = (
+            'id',
+            'url',
+        )
 
 class SchoolSerializer(serializers.ModelSerializer):
+    sources = SourceSerializer(read_only=True, many=True)
+    key_words = KeyWordSerializer(read_only=True, many=True)
     class Meta:
         model = School
         fields = (
@@ -11,7 +32,9 @@ class SchoolSerializer(serializers.ModelSerializer):
             'name',
             'address',
             'city',
-            'state'
+            'state',
+            'sources',
+            'key_words',
         )
 
 class UserDataSerializer(serializers.ModelSerializer):

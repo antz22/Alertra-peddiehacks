@@ -71,6 +71,19 @@ class APIServices {
     return data;
   }
 
+  Future<Map<String, dynamic>> retrieveSchoolInfo() async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/get-school-data/');
+    final response = await http.get(url, headers: headers);
+    var data = json.decode(response.body);
+    return data;
+  }
+
   Future<String> createReport(
       String description,
       String location,
@@ -132,6 +145,29 @@ class APIServices {
       'content': content,
       'priority': priority,
       'report_id': report?.id,
+    });
+    try {
+      await http.post(url, headers: headers, body: body);
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> createSchool(
+      String name, String address, String city, String state) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/create-school/');
+    final body = json.encode({
+      'name': name,
+      'address': address,
+      'city': city,
+      'state': state,
     });
     try {
       await http.post(url, headers: headers, body: body);

@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
+
+
 # School model serves as a link between all of the Users, Reports, and Alerts in a school
 class School(models.Model):
     name = models.CharField(max_length=128)
@@ -11,6 +14,13 @@ class School(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class Source(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True, related_name='sources')
+    url = models.URLField(max_length=200)
+
+class KeyWord(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True, related_name='key_words')
+    word = models.CharField(max_length=64)
 
 class User(AbstractUser):
     # teacher, student

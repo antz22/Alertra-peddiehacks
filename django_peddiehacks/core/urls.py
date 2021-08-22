@@ -7,6 +7,7 @@ urlpatterns = [
 	path('get-alerts/', views.AlertList.as_view()),
 	path('get-schools/', views.SchoolList.as_view()),
 	path('get-user-data/', views.getUserData),
+	path('get-school-data/', views.getSchoolData),
 	path('get-report-data/', views.getReportData),
 	path('create-user/', views.createUser),
     path('create-report/', views.createReport),

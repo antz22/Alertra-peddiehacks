@@ -6,13 +6,12 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Report, ReportSearchResult, ReportType, Alert, School
+from .models import Report, ReportSearchResult, ReportType, Alert, School, Source, KeyWord
 from .serializers import ReportSerializer, ReportTypeSerializer, AlertSerializer, UserDataSerializer, SchoolSerializer
 
 import numpy as np 
 import pandas as pd 
 import matplotlib.pyplot as plt
-#import seaborn as sns
 from sklearn.feature_extraction import text
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cluster import KMeans
@@ -75,7 +74,7 @@ class AlertList(APIView):
         return Response(serializer.data)
 
 
-#webscraper function to find report search results
+# webscraper function to find report search results
 def webscrape(town, incident):
     os.environ['MOZ_HEADLESS'] = '1'
     driver = webdriver.Firefox()
@@ -127,6 +126,7 @@ def findSource(word, headlines, sources):
         if word in headline.lower():
             return sources[intCtr]
 
+
 # function to initialize the User model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -159,6 +159,19 @@ def getUserData(request):
         'school': user.school.name,
         'username': user.username,
     })
+
+
+# function to retrieve data from the User model fields
+@api_view(['GET'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def getSchoolData(request):
+
+    user = request.user
+    school = user.school
+
+    serializer = SchoolSerializer(school)
+    return Response(serializer.data)
 
 
 # function to initialize the Report model
@@ -267,8 +280,8 @@ def createSchool(request):
     city = data['city']
     state = data['state']
 
-    new_alert = Report.objects.create(user=user, name=name, address=address, state=state)
-    new_alert.save()
+    new_school = School.objects.create(name=name, address=address, city=city, state=state)
+    new_school.save()
     
     filePath = os.path.join('django_peddiehacks\\extras\\datasets', name + '.csv')
     headlines, sources = findSafetyNews(city, state)
@@ -353,6 +366,14 @@ def createSchool(request):
                 if word in lstValue and key not in lstKeyWords:
                     lstKeyWords.append(key)
                     lstSources.append(findSource(word, headlines, sources))
+    
+    for src in lstSources:
+        new_source = Source.objets.create(school=new_school, source=src)
+        new_source.save()
+    for word in lstKeyWords:
+        new_key_word = KeyWord.objects.create(school=new_school, key_word=word)
+        new_key_word.save()
+
 
     return Response(status=status.HTTP_201_CREATED)  
 
