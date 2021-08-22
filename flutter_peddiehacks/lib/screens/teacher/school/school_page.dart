@@ -22,7 +22,8 @@ class _SchoolPageState extends State<SchoolPage> {
   Future<Map<String, dynamic>> _retrieveInfo() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     school = await prefs.getString('school')!;
-    var response = await context.read<APIServices>().retrieveSchoolInfo();
+    // var response = await context.read<APIServices>().retrieveSchoolInfo();
+    var response;
     return response;
   }
 
