@@ -6,6 +6,7 @@ class School(models.Model):
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=128)
     city = models.CharField(max_length=128)
+    state = models.CharField(max_length=128)
 
     def __str__(self):
         return f"{self.name}"

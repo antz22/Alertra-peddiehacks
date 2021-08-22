@@ -1,7 +1,18 @@
 from rest_framework import serializers
 
-from .models import Report, ReportType, Alert, ReportSearchResult, User
+from .models import Report, ReportType, Alert, ReportSearchResult, User, School
 
+
+class SchoolSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = School
+        fields = (
+            'id',
+            'name',
+            'address',
+            'city',
+            'state'
+        )
 
 class UserDataSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(source='school.name')
