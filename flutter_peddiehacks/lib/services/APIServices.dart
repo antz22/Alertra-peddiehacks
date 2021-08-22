@@ -127,7 +127,7 @@ class APIServices {
     }
   }
 
-  Future<String> deleteReport(String id) async {
+  Future<String> deleteReport(int id) async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
     final headers = {
@@ -146,7 +146,7 @@ class APIServices {
     }
   }
 
-  Future<String> approveReport(String id, bool approved) async {
+  Future<String> approveReport(int id, bool approved) async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
     final headers = {
