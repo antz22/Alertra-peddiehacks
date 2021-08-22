@@ -102,14 +102,16 @@ def webscrape(town, incident):
 
 # function to create csv datasets with search headlines for kmeans clustering
 def createData(filePath, headlines):
-    print(filePath)
-    print(headlines)
-    with open(filePath, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(["index", "headline_text"])
-        for index, headline in enumerate(headlines):
-            writer.writerow([index, headline])
-            print(index, headline)
+    lstReturnData = []
+    for index, headline in enumerate(headlines):
+        lstReturnData.append([index, headline])
+
+    return lstReturnData
+    # with open(filePath, 'w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(["index", "headline_text"])
+    #     for index, headline in enumerate(headlines):
+    #         writer.writerow([index, headline])
 
 
 
@@ -294,12 +296,10 @@ def createSchool(request):
     print(headlines)
     print(sources)
 
-    createData(filePath, headlines)
-
     # Following code is for clustering to find the most frequent types of safety issues in a school's city
     # data = pd.read_csv("C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\PeddieHacks 2021\\django_peddiehacks\\extras\\datasets\\{}.csv".format(name), error_bad_lines=False, usecols =["headline_text"])
-    data = pd.read_csv("/home/antz/vscode/App/flutter/peddiehacks-2021/django_peddiehacks/extras/datasets/{}.csv".format(name), error_bad_lines=False, usecols =["headline_text"])
-    print(data.head())
+    # data = pd.read_csv("/home/antz/vscode/App/flutter/peddiehacks-2021/django_peddiehacks/extras/datasets/{}.csv".format(name), error_bad_lines=False, usecols =["headline_text"])
+    data = pd.DataFrame(createData(filePath, headlines), columns = ['index', 'headline_text'])
 
     # Dictionary of words indicating danger in news articles
     dicDangerWords = {
