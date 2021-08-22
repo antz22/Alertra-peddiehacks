@@ -8,6 +8,7 @@ urlpatterns = [
     # path('get-report-search-result/', views.ReportSearchResultList.as_view()),
 	path('get-alerts/', views.AlertList.as_view()),
 	path('get-user-data/', views.getUserData),
+	path('get-report-data/', views.getReportData),
 	path('create-user/', views.createUser),
     path('create-report/', views.createReport),
     path('create-alert/', views.createAlert),

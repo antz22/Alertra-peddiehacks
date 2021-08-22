@@ -182,19 +182,18 @@ def createReport(request):
         priority = data['priority']
         description = data['description']
         report_type_name = data['report_type_name']
+        picture = data['picture']
         report_type = ReportType.objects.get(name=report_type_name)
 
-        new_report = Report.objects.create(user=user, description=description, location=location, priority=priority, school=school, report_type=report_type)
+        new_report = Report.objects.create(user=user, description=description, location=location, priority=priority, school=school, report_type=report_type, picture=picture)
     except: 
         # if it doesn't it is an emergency report with only the report type and a default of high priority
         description = data['description']
         report_type_name = data['report_type_name']
         report_type = ReportType.objects.get(name=report_type_name)
         priority = 'high'
-        picture = data['picture']
-        print(picture)
 
-        new_report = Report.objects.create(user=user, report_type=report_type, priority=priority, school=school, description=description, picture=picture)
+        new_report = Report.objects.create(user=user, report_type=report_type, priority=priority, school=school, description=description)
 
 
     new_report.save()
@@ -218,6 +217,20 @@ def createReport(request):
     return Response(status=status.HTTP_201_CREATED)
 
 
+@api_view(['POST'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def getReportData(request):
+
+    report_id = request.data['report_id']
+    report = Report.objects.get(id=report_id)
+    serializer = ReportSerializer(report)
+
+    return Response(serializer.data)
+
+
+
+
 #function to initialize the Alert model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
@@ -230,15 +243,17 @@ def createAlert(request):
     head_line = data['headline']
     content = data['content']
     recipient = data['recipient']
+    report_id = data['report_id']
     school = School.objects.get(name=user.school.name)
+    report = Report.objects.get(id=report_id)
 
     if recipient == 'All':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report)
     elif recipient == 'Teachers':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report)
     elif recipient == 'Students':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report)
 
 
     new_alert.save()

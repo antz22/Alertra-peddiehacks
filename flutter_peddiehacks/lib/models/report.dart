@@ -15,7 +15,7 @@ class Report {
     required this.school,
     required this.time,
     required this.approved,
-    this.description = '',
+    required this.description,
     this.location = '',
     this.report_type = '',
     this.picture_url = '',
@@ -29,9 +29,9 @@ class Report {
       time: json['time'],
       approved: json['approved'],
       description: json['description'],
-      location: json['location'],
-      report_type: json['report_type_name'],
-      picture_url: json['get_picture'],
+      location: json['location'] ?? '',
+      report_type: json['report_type_name'] ?? '',
+      picture_url: json['get_picture'] ?? '',
     );
   }
 }

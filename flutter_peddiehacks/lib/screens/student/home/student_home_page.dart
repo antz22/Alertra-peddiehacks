@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_peddiehacks/constants/constants.dart';
+import 'package:flutter_peddiehacks/screens/profile/profile_page.dart';
 import 'package:flutter_peddiehacks/screens/student/alerts/alerts_page.dart';
-import 'package:flutter_peddiehacks/screens/student/profile/student_profile_page.dart';
 import 'package:flutter_peddiehacks/screens/student/report/report_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/home/teacher_home_page.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,7 +18,7 @@ class _StudentHomePageState extends State<StudentHomePage> {
   List<Widget> tabs = [
     AlertsPage(),
     ReportPage(),
-    StudentProfilePage(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

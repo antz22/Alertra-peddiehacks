@@ -15,6 +15,8 @@ class EmergencyReportPage extends StatefulWidget {
 
 class _EmergencyReportPageState extends State<EmergencyReportPage> {
   final descController = new TextEditingController();
+
+  bool _isLoading = false;
   String dropdownValue = '';
   List<String> items = new List.from([]);
 
@@ -37,66 +39,82 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
         title: Text('Emergency Report'),
         backgroundColor: kRedWarningColor,
       ),
-      body: Container(
-        padding: EdgeInsets.all(kDefaultPadding),
-        child: FutureBuilder(
-          future: _retrieveReportTypes(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data == 'Success') {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Emergency Reports have a default of High Priority and will alert teachers through push notifications immediately.',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey.shade500,
-                    ),
-                  ),
-                  SizedBox(height: 2 * kDefaultPadding),
-                  Text('What is the type of your emergency?'),
-                  CustomDropdown(dropdownValue: dropdownValue, items: items),
-                  SizedBox(height: 1.5 * kDefaultPadding),
-                  Text(
-                    'Describe the incident you wish to report.',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  SizedBox(height: 0.7 * kDefaultPadding),
-                  CustomTextField(
-                      controller: descController,
-                      hintText: 'Description',
-                      verbose: true),
-                  Spacer(),
-                  Center(
-                    child: GestureDetector(
-                      onTap: () async {
-                        await context.read<APIServices>().createReport(
-                            descController.text,
-                            '',
-                            'high',
-                            dropdownValue,
-                            '',
-                            true);
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.only(
+                  top: kDefaultPadding,
+                  left: kDefaultPadding,
+                  right: kDefaultPadding),
+              child: FutureBuilder(
+                future: _retrieveReportTypes(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data == 'Success') {
+                    return SingleChildScrollView(
+                      scrollDirection: Axis.vertical,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Emergency Reports have a default of High Priority and will alert teachers through push notifications immediately.',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                          SizedBox(height: 2 * kDefaultPadding),
+                          Text('What is the type of your emergency?'),
+                          CustomDropdown(
+                              dropdownValue: dropdownValue, items: items),
+                          SizedBox(height: 1.5 * kDefaultPadding),
+                          Text(
+                            'Describe the incident you wish to report.',
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          SizedBox(height: 0.7 * kDefaultPadding),
+                          CustomTextField(
+                              controller: descController,
+                              hintText: 'Description',
+                              verbose: true),
+                          SizedBox(height: 3.0 * kDefaultPadding),
+                          Center(
+                            child: GestureDetector(
+                              onTap: () async {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                await context.read<APIServices>().createReport(
+                                    descController.text,
+                                    '',
+                                    'high',
+                                    dropdownValue,
+                                    '',
+                                    true);
 
-                        Navigator.pop(context);
-                      },
-                      child: CustomButton(purpose: 'warning', text: 'REPORT'),
-                    ),
-                  ),
-                ],
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-      ),
+                                setState(() {
+                                  _isLoading = false;
+                                });
+                                Navigator.pop(context);
+                              },
+                              child: CustomButton(
+                                  purpose: 'warning', text: 'REPORT'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
+            ),
     );
   }
 }

@@ -141,10 +141,14 @@ class _NewReportPageState extends State<NewReportPage> {
                               await context.read<APIServices>().createReport(
                                   descController.text,
                                   locationController.text,
-                                  dropdownValue2,
+                                  dropdownValue2.toLowerCase(),
                                   dropdownValue1,
                                   file!.path,
                                   false);
+
+                              setState(() {
+                                _isLoading = false;
+                              });
                               Navigator.pop(context);
                             },
                             child:

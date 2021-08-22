@@ -7,7 +7,7 @@ class Alert {
   final String recipient;
   final String school;
   final String time;
-  final Report? linked_report;
+  final int? report_id;
 
   Alert({
     required this.priority,
@@ -16,7 +16,7 @@ class Alert {
     required this.recipient,
     required this.school,
     required this.time,
-    this.linked_report,
+    this.report_id,
   });
 
   factory Alert.fromJson(Map<String, dynamic> json) {
@@ -27,15 +27,7 @@ class Alert {
       recipient: json['recipient'],
       school: json['school_name'],
       time: json['time'],
+      report_id: json['report_id'],
     );
   }
-
-  dynamic toJson() => {
-        'priority': priority,
-        'headline': headline,
-        'content': content,
-        'recipient': recipient,
-        'school_name': school,
-        'time': time,
-      };
 }

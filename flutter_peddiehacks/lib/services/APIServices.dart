@@ -41,6 +41,24 @@ class APIServices {
     return reports;
   }
 
+  Future<Report> retrieveReport(int id) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/get-report-data/');
+    final body = json.encode({
+      'report_id': id,
+    });
+    final response = await http.post(url, headers: headers, body: body);
+    var data = json.decode(response.body);
+    print(data);
+    Report report = Report.fromJson(data);
+    return report;
+  }
+
   Future<List<String>> retrieveReportTypes() async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
@@ -124,7 +142,7 @@ class APIServices {
   }
 
   Future<String> createAlert(String recipients, String headline, String content,
-      String priority) async {
+      String priority, Report? report) async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
     final headers = {
@@ -137,6 +155,7 @@ class APIServices {
       'headline': headline,
       'content': content,
       'priority': priority,
+      'report_id': report?.id,
     });
     try {
       await http.post(url, headers: headers, body: body);

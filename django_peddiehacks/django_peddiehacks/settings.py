@@ -128,7 +128,8 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-DATETIME_FORMAT = '&d %m, %Y %H:%M%p'
+DATETIME_FORMAT = '%d %b, %Y %I:%M%p'
+DATE_FORMAT = '%Y'
 
 USE_L10N = False
 

@@ -1,6 +1,12 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_peddiehacks/models/report.dart';
+import 'package:flutter_peddiehacks/screens/report_info/report_info_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/models/alert.dart';
+import 'package:flutter_peddiehacks/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AlertInfoScreen extends StatelessWidget {
@@ -47,6 +53,92 @@ class AlertInfoScreen extends StatelessWidget {
                 ),
               ],
             ),
+            SizedBox(height: kDefaultPadding),
+            alert.report_id == null
+                ? SizedBox.shrink()
+                : FutureBuilder(
+                    future: context
+                        .read<APIServices>()
+                        .retrieveReport(alert.report_id!),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        Report report = snapshot.data as Report;
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ReportInfoScreen(report: report),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(kDefaultPadding),
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 5.0,
+                                  offset: Offset(0, 2),
+                                  spreadRadius: 0.0,
+                                  color: Colors.black.withOpacity(0.15),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        report.approved
+                                            ? '${report.report_type} (Approved Report)'
+                                            : '${report.report_type} (Unreviewed Report)',
+                                        style: TextStyle(
+                                          fontSize: 17.0,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.rotate(
+                                        angle: 180 * math.pi / 180,
+                                        child: Icon(Icons.arrow_back)),
+                                  ],
+                                ),
+                                SizedBox(height: 0.7 * kDefaultPadding),
+                                Text(
+                                  report.description,
+                                  style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                                SizedBox(height: 0.7 * kDefaultPadding),
+                                report.picture_url != ''
+                                    ? Container(
+                                        child: ClipRRect(
+                                          child: Image(
+                                            image: NetworkImage(
+                                                '${report.picture_url}'),
+                                          ),
+                                        ),
+                                      )
+                                    : SizedBox.shrink(),
+                              ],
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
           ],
         ),
       ),
@@ -121,11 +213,10 @@ class AlertInfoScreen extends StatelessWidget {
   }
 }
 
+// if (priority == 'high') {
 
-    // if (priority == 'high') {
+// } else if (priority == 'medium') {
 
-    // } else if (priority == 'medium') {
+// } else {
 
-    // } else {
-
-    // }
+// }

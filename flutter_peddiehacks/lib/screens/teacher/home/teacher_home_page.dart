@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_peddiehacks/constants/constants.dart';
+import 'package:flutter_peddiehacks/screens/profile/profile_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/alert/alert_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/feed/feed_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/profile/teacher_profile_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_nav.dart';
 import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_page.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +19,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   List<Widget> tabs = [
     FeedPage(),
     SendAlertNav(),
-    TeacherProfilePage(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {

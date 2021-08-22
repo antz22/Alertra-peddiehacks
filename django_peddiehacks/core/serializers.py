@@ -23,6 +23,7 @@ class ReportTypeSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     report_type_name = serializers.CharField(source='report_type.name')
     school_name = serializers.CharField(source='school.name')
+    time = serializers.DateTimeField(format="%d %b, %Y %H:%M%p")
     class Meta:
         model = Report
         fields = (
@@ -49,6 +50,7 @@ class ReportSearchResultSerializer(serializers.ModelSerializer):
 
 class AlertSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(source='school.name')
+    report_id = serializers.IntegerField(source='linked_report.id')
     class Meta:
         model = Alert
         fields = (
@@ -59,4 +61,5 @@ class AlertSerializer(serializers.ModelSerializer):
             'recipient',
             'school_name',
             'time',
+            'report_id'
         )
