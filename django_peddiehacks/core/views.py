@@ -283,7 +283,7 @@ def createSchool(request):
     new_school = School.objects.create(name=name, address=address, city=city, state=state)
     new_school.save()
     
-    filePath = os.path.join('django_peddiehacks\\extras\\datasets', name + '.csv')
+    filePath = 'django_peddiehacks\\extras\\datasets\\{}.csv'.format(name)
     headlines, sources = findSafetyNews(city, state)
 
     createData(filePath, headlines)
