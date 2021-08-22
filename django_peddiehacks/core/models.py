@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-
+#School model serves as a link between all of the Users, Reports, and Alerts in a school
 class School(models.Model):
     name = models.CharField(max_length=128)
     address = models.CharField(max_length=128)
@@ -16,13 +16,12 @@ class User(AbstractUser):
     role = models.CharField(max_length=64, null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True)
 
-
+#Pre-set categories for reports so users can create reports quickly if necessary
 class ReportType(models.Model):
     name = models.CharField(max_length=128)
 
     def __str__(self):
         return f"{self.name}"
-
 
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports')
@@ -44,7 +43,7 @@ class Report(models.Model):
             return 'http://127.0.0.1:8000' + self.picture.url
         return ''
 
-
+#Search results that may corroborate with a report
 class ReportSearchResult(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='search_results')
     url = models.URLField(max_length=200)
