@@ -34,6 +34,7 @@ class ReportSerializer(serializers.ModelSerializer):
             'get_picture',
             'school_name',
             'time',
+            'approved',
         )
 
 class ReportSearchResultSerializer(serializers.ModelSerializer):

@@ -206,12 +206,12 @@ def createAlert(request):
     school = School.objects.get(name=user.school.name)
 
     if recipient == 'All':
-        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
-        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
     elif recipient == 'Teachers':
-        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
     elif recipient == 'Students':
-        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
+        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
 
 
     new_alert.save()
@@ -301,3 +301,32 @@ def createSchool(request):
 
 
     return Response(status=status.HTTP_201_CREATED)  
+
+
+
+@api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def deleteReport(request):
+    data = request.data
+    report_id = data['id']
+
+    report = Report.objects.get(id=report_id).delete()
+
+    return Response(status=status.HTTP_200_OK)  
+
+
+@api_view(['PUT'])
+@authentication_classes([authentication.TokenAuthentication])
+@permission_classes([permissions.IsAuthenticated])
+def approveReport(request):
+    data = request.data
+    report_id = data['id']
+    approved = data['approved']
+
+    report = Report.objects.get(id=report_id)
+    report.approved = approved
+
+    report.save()
+
+    return Response(status=status.HTTP_200_OK)  

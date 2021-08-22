@@ -28,81 +28,84 @@ class _SendAlertPageState extends State<SendAlertPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          PageBanner(text: 'Send an Alert'),
-          Padding(
-            padding: EdgeInsets.only(
-                top: kDefaultPadding,
-                left: kDefaultPadding,
-                right: kDefaultPadding),
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                ListView(
-                  shrinkWrap: true,
-                  children: [
-                    SizedBox(height: 0.5 * kDefaultPadding),
-                    Text(
-                      'Recipients',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w400,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          children: [
+            PageBanner(text: 'Send an Alert'),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: kDefaultPadding, right: kDefaultPadding),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  ListView(
+                    shrinkWrap: true,
+                    children: [
+                      SizedBox(height: 0.5 * kDefaultPadding),
+                      Text(
+                        'Recipients',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 0.7 * kDefaultPadding),
-                    CustomDropdown(
-                        dropdownValue: dropdownValue1, items: items1),
-                    SizedBox(height: 1.5 * kDefaultPadding),
-                    Text(
-                      'Head Line',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w400,
+                      SizedBox(height: 0.7 * kDefaultPadding),
+                      CustomDropdown(
+                          dropdownValue: dropdownValue1, items: items1),
+                      SizedBox(height: 1.5 * kDefaultPadding),
+                      Text(
+                        'Head Line',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 0.7 * kDefaultPadding),
-                    CustomTextField(
-                        controller: headlineController, hintText: ''),
-                    SizedBox(height: 1.5 * kDefaultPadding),
-                    Text(
-                      'Content',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w400,
+                      SizedBox(height: 0.7 * kDefaultPadding),
+                      CustomTextField(
+                          controller: headlineController, hintText: ''),
+                      SizedBox(height: 1.5 * kDefaultPadding),
+                      Text(
+                        'Content',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 0.7 * kDefaultPadding),
-                    CustomTextField(
-                        controller: contentController, hintText: ''),
-                    Text(
-                      'Alert Priority',
-                      style: TextStyle(
-                        fontSize: 17.0,
-                        fontWeight: FontWeight.w400,
+                      SizedBox(height: 0.7 * kDefaultPadding),
+                      CustomTextField(
+                          controller: contentController, hintText: ''),
+                      SizedBox(height: 1.5 * kDefaultPadding),
+                      Text(
+                        'Alert Priority',
+                        style: TextStyle(
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.w400,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 0.7 * kDefaultPadding),
-                    CustomDropdown(dropdownValue: dropdownValue2, items: items2)
-                  ],
-                ),
-                SizedBox(height: 3 * kDefaultPadding),
-                GestureDetector(
-                  onTap: () async {
-                    await context.read<APIServices>().createAlert(
-                          dropdownValue1,
-                          headlineController.text,
-                          contentController.text,
-                          dropdownValue2,
-                        );
-                    Navigator.pop(context);
-                  },
-                  child: CustomButton(purpose: 'other', text: 'SEND'),
-                ),
-              ],
+                      SizedBox(height: 0.7 * kDefaultPadding),
+                      CustomDropdown(
+                          dropdownValue: dropdownValue2, items: items2)
+                    ],
+                  ),
+                  SizedBox(height: 3 * kDefaultPadding),
+                  GestureDetector(
+                    onTap: () async {
+                      await context.read<APIServices>().createAlert(
+                            dropdownValue1,
+                            headlineController.text,
+                            contentController.text,
+                            dropdownValue2,
+                          );
+                      Navigator.pop(context);
+                    },
+                    child: CustomButton(purpose: 'other', text: 'SEND'),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

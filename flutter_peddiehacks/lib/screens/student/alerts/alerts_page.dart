@@ -60,7 +60,9 @@ class _AlertsPageState extends State<AlertsPage> {
                                   width: 42.0,
                                   height: 42.0,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
+                                    color: alert.priority == 'high'
+                                        ? kRedWarningColor
+                                        : Colors.white,
                                     shape: BoxShape.circle,
                                     boxShadow: [
                                       _buildBoxShadow(alert.priority),
@@ -132,7 +134,7 @@ class _AlertsPageState extends State<AlertsPage> {
       return IconButton(
         onPressed: () {},
         icon: SvgPicture.asset('assets/svgs/warning.svg',
-            color: kRedWarningColor, height: 100.0, width: 100.0),
+            color: Colors.white, height: 100.0, width: 100.0),
       );
     } else if (priority == 'medium') {
       return IconButton(
@@ -152,14 +154,14 @@ class _AlertsPageState extends State<AlertsPage> {
   BoxShadow _buildBoxShadow(String priority) {
     if (priority == 'high') {
       return BoxShadow(
-        color: kRedWarningColor.withOpacity(0.15),
+        color: kRedWarningColor.withOpacity(0.35),
         spreadRadius: 0,
         blurRadius: 7.0,
         offset: Offset(0, 4),
       );
     } else if (priority == 'medium') {
       return BoxShadow(
-        color: kOrangeWarningColor.withOpacity(0.15),
+        color: kOrangeWarningColor.withOpacity(0.35),
         spreadRadius: 0,
         blurRadius: 7.0,
         offset: Offset(0, 4),

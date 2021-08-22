@@ -26,7 +26,7 @@ class ReportType(models.Model):
 
 class Report(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reports')
-    description = models.CharField(max_length=64, null=True, blank=True)
+    description = models.CharField(max_length=128, null=True, blank=True)
     location = models.CharField(max_length=64, null=True, blank=True)
     report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, null=True, blank=True)
     # low, medium, high
@@ -34,6 +34,7 @@ class Report(models.Model):
     picture = models.ImageField(upload_to='uploads/', null=True, blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.priority} priority report"

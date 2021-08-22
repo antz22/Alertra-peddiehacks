@@ -12,4 +12,6 @@ urlpatterns = [
     path('create-report/', views.createReport),
     path('create-alert/', views.createAlert),
     path('create-school/', views.createSchool),
+    path('delete-report/', views.deleteReport),
+    path('approve-report/', views.approveReport),
 ]

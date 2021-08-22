@@ -35,6 +35,7 @@ class APIServices {
     final url = Uri.parse(API_BASE_URL + '/api/v1/get-reports/');
     final response = await http.get(url, headers: headers);
     List<dynamic> data = json.decode(response.body);
+    print(data);
     List<Report> reports =
         data.map((report) => Report.fromJson(report)).toList();
     return reports;
@@ -113,13 +114,52 @@ class APIServices {
     };
     final url = Uri.parse(API_BASE_URL + '/api/v1/create-alert/');
     final body = json.encode({
-      'recipients': recipients,
+      'recipient': recipients,
       'headline': headline,
       'content': content,
       'priority': priority,
     });
     try {
       await http.post(url, headers: headers, body: body);
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> deleteReport(String id) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/delete-report/');
+    final body = json.encode({
+      'id': id,
+    });
+    try {
+      await http.put(url, headers: headers, body: body);
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
+  }
+
+  Future<String> approveReport(String id, bool approved) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/approve-report/');
+    final body = json.encode({
+      'id': id,
+      'approved': approved,
+    });
+    try {
+      await http.put(url, headers: headers, body: body);
       return 'Success';
     } catch (e) {
       return e.toString();

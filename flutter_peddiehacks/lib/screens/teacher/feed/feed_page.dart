@@ -3,6 +3,7 @@ import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/models/alert.dart';
 import 'package:flutter_peddiehacks/models/report.dart';
 import 'package:flutter_peddiehacks/screens/alert_info/alert_info_screen.dart';
+import 'package:flutter_peddiehacks/screens/report_ifno/report_info_screen.dart';
 import 'package:flutter_peddiehacks/widgets/page_banner.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -73,10 +74,13 @@ class _FeedPageState extends State<FeedPage> {
                                       width: 42.0,
                                       height: 42.0,
                                       decoration: BoxDecoration(
-                                        color: Colors.white,
+                                        color: alert.priority == 'high'
+                                            ? kRedWarningColor
+                                            : Colors.white,
                                         shape: BoxShape.circle,
                                         boxShadow: [
-                                          _buildBoxShadow(alert.priority),
+                                          _buildBoxShadow(
+                                              alert.priority, 'alert'),
                                         ],
                                       ),
                                     ),
@@ -132,65 +136,75 @@ class _FeedPageState extends State<FeedPage> {
                             itemCount: reports.length,
                             itemBuilder: (context, index) {
                               Report report = reports[index];
-                              return Row(
-                                children: [
-                                  Container(
-                                    margin:
-                                        EdgeInsets.only(right: kDefaultPadding),
-                                    child: Container(
-                                      child: _buildWarningIcon(report.priority),
-                                      width: 42.0,
-                                      height: 42.0,
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          _buildBoxShadow(report.priority),
-                                        ],
+                              return Container(
+                                margin:
+                                    EdgeInsets.only(bottom: kDefaultPadding),
+                                child: Row(
+                                  children: [
+                                    Container(
+                                      margin: EdgeInsets.only(
+                                          right: kDefaultPadding),
+                                      child: Container(
+                                        child:
+                                            _buildReportIcon(report.priority),
+                                        width: 42.0,
+                                        height: 42.0,
+                                        decoration: BoxDecoration(
+                                          color: report.priority == 'high'
+                                              ? kRedWarningColor
+                                              : Colors.white,
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            _buildBoxShadow(
+                                                report.priority, 'report'),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                  Expanded(
-                                    child: GestureDetector(
-                                      // onTap: () => Navigator.push(
-                                      //   context,
-                                      //   MaterialPageRoute(
-                                      //     builder: (context) =>
-                                      //         AlertInfoScreen(alert: alert),
-                                      //   ),
-                                      // ),
-                                      child: Container(
-                                        child: RichText(
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 4,
-                                          text: TextSpan(
-                                            text: '${report.report_type}: ',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              fontSize: 15.0,
-                                            ),
-                                            children: [
-                                              TextSpan(
-                                                text: report.description,
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w400,
-                                                ),
+                                    Expanded(
+                                      child: GestureDetector(
+                                        onTap: () => Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                ReportInfoScreen(
+                                                    report: report,
+                                                    role: 'Teacher'),
+                                          ),
+                                        ),
+                                        child: Container(
+                                          child: RichText(
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 4,
+                                            text: TextSpan(
+                                              text: '${report.report_type}: ',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 15.0,
                                               ),
-                                            ],
+                                              children: [
+                                                TextSpan(
+                                                  text: report.description,
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w400,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(width: kDefaultPadding),
-                                  GestureDetector(
-                                    onTap: () {},
-                                    child: Icon(Icons.more_horiz_sharp,
-                                        color: kPrimaryColor),
-                                  ),
-                                ],
+                                    SizedBox(width: kDefaultPadding),
+                                    GestureDetector(
+                                      onTap: () {},
+                                      child: Icon(Icons.more_horiz_sharp,
+                                          color: kPrimaryColor),
+                                    ),
+                                  ],
+                                ),
                               );
                             },
                           ),
@@ -211,12 +225,28 @@ class _FeedPageState extends State<FeedPage> {
     );
   }
 
+  IconButton _buildReportIcon(String priority) {
+    if (priority == 'high') {
+      return IconButton(
+        onPressed: () {},
+        icon: SvgPicture.asset('assets/svgs/file.svg',
+            color: Colors.white, height: 100.0, width: 100.0),
+      );
+    } else {
+      return IconButton(
+        onPressed: () {},
+        icon: SvgPicture.asset('assets/svgs/file.svg',
+            color: kPrimaryColor, height: 100.0, width: 100.0),
+      );
+    }
+  }
+
   IconButton _buildWarningIcon(String priority) {
     if (priority == 'high') {
       return IconButton(
         onPressed: () {},
         icon: SvgPicture.asset('assets/svgs/warning.svg',
-            color: kRedWarningColor, height: 100.0, width: 100.0),
+            color: Colors.white, height: 100.0, width: 100.0),
       );
     } else if (priority == 'medium') {
       return IconButton(
@@ -233,24 +263,28 @@ class _FeedPageState extends State<FeedPage> {
     }
   }
 
-  BoxShadow _buildBoxShadow(String priority) {
+  BoxShadow _buildBoxShadow(String priority, String type) {
     if (priority == 'high') {
       return BoxShadow(
-        color: kRedWarningColor.withOpacity(0.15),
+        color: kRedWarningColor.withOpacity(0.35),
         spreadRadius: 0,
         blurRadius: 7.0,
         offset: Offset(0, 4),
       );
     } else if (priority == 'medium') {
       return BoxShadow(
-        color: kOrangeWarningColor.withOpacity(0.15),
+        color: type == 'alert'
+            ? kOrangeWarningColor.withOpacity(0.35)
+            : kPrimaryColor.withOpacity(0.35),
         spreadRadius: 0,
         blurRadius: 7.0,
         offset: Offset(0, 4),
       );
     } else {
       return BoxShadow(
-        color: kYellowWarningColor.withOpacity(0.50),
+        color: type == 'alert'
+            ? kYellowWarningColor.withOpacity(0.50)
+            : kPrimaryColor.withOpacity(0.35),
         spreadRadius: 0,
         blurRadius: 7.0,
         offset: Offset(0, 4),

@@ -3,6 +3,8 @@ import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/screens/teacher/alert/alert_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/feed/feed_page.dart';
 import 'package:flutter_peddiehacks/screens/teacher/profile/teacher_profile_page.dart';
+import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_nav.dart';
+import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_page.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TeacherHomePage extends StatefulWidget {
@@ -16,7 +18,7 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
   int _selectedIndex = 0;
   List<Widget> tabs = [
     FeedPage(),
-    AlertPage(),
+    SendAlertNav(),
     TeacherProfilePage(),
   ];
   @override
@@ -48,13 +50,13 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
       },
       items: [
         BottomNavigationBarItem(
-          icon: SvgPicture.asset('assets/svgs/alerts.svg',
-              color: _selectedIndex == 0 ? kPrimaryColor : Color(0xFFBDBDBD)),
-          label: 'Alerts',
+          icon: Icon(Icons.warning),
+          label: 'Feed',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.warning),
-          label: 'Report',
+          icon: SvgPicture.asset('assets/svgs/alerts.svg',
+              color: _selectedIndex == 1 ? kPrimaryColor : Color(0xFFBDBDBD)),
+          label: 'Alert',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.person),

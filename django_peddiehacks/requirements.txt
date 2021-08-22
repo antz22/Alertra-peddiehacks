@@ -4,4 +4,8 @@ django-cors-headers
 djoser
 pillow
 selenium
-urlparse
+urlparser
+numpy
+pandas
+skleran
+nltk
