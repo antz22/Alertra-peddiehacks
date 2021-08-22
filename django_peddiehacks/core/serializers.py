@@ -19,7 +19,9 @@ class SourceSerializer(serializers.Serializer):
     class Meta:
         model = Source
         fields = (
-            '__all__'
+            'id',
+            'school_id',
+            'url',
         )
 
 class SchoolSerializer(serializers.ModelSerializer):
