@@ -102,4 +102,27 @@ class APIServices {
       return e.toString();
     }
   }
+
+  Future<String> createAlert(String recipients, String headline, String content,
+      String priority) async {
+    final storage = new FlutterSecureStorage();
+    final token = await storage.read(key: 'restAPI');
+    final headers = {
+      "Content-Type": "application/json",
+      "Authorization": "Token " + token!
+    };
+    final url = Uri.parse(API_BASE_URL + '/api/v1/create-alert/');
+    final body = json.encode({
+      'recipients': recipients,
+      'headline': headline,
+      'content': content,
+      'priority': priority,
+    });
+    try {
+      await http.post(url, headers: headers, body: body);
+      return 'Success';
+    } catch (e) {
+      return e.toString();
+    }
+  }
 }

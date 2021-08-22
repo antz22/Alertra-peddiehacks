@@ -73,8 +73,7 @@ class AlertList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        # alerts = Alert.objects.filter(recipient=request.user.role)
-        alerts = Alert.objects.all()
+        alerts = Alert.objects.filter(recipient=request.user.role)
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
@@ -201,14 +200,20 @@ def createAlert(request):
     data = request.data
     user = request.user
 
-    head_line = data['head_line']
+    head_line = data['headline']
     content = data['content']
     recipient = data['recipient']
-    school_name = data['school_name']
-    school = School.objects.get(name=school_name)
+    school = School.objects.get(name=user.school.name)
+
+    if recipient == 'All':
+        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
+        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
+    elif recipient == 'Teachers':
+        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school)
+    elif recipient == 'Students':
+        new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school)
 
 
-    new_alert = Report.objects.create(user=user, head_line=head_line, content=content, recipient=recipient, school=school)
     new_alert.save()
 
 
@@ -226,7 +231,6 @@ def createSchool(request):
     name = data['name']
     address = data['address']
     city = data['city']
-
 
     new_alert = Report.objects.create(user=user, name=name, address=address)
     new_alert.save()
