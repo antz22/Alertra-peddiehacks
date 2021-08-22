@@ -1,5 +1,3 @@
-import 'package:flutter_peddiehacks/models/report.dart';
-
 class Alert {
   final String priority;
   final String headline;

@@ -33,10 +33,8 @@ import csv
 
 from pygooglenews import GoogleNews
 
-def index(request):
-    pass
+# Creating the lists of the django models
 
-#Creating the lists of the django models
 class ReportList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -46,6 +44,7 @@ class ReportList(APIView):
         serializer = ReportSerializer(reports, many=True)
         return Response(serializer.data)
 
+
 class SchoolList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -54,6 +53,7 @@ class SchoolList(APIView):
         schools = School.objects.all()
         serializer = SchoolSerializer(schools, many=True)
         return Response(serializer.data)
+
 
 class ReportTypeList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
@@ -65,16 +65,6 @@ class ReportTypeList(APIView):
         return Response(serializer.data)
 
 
-# class ReportSearchResultList(APIView):
-#     authentication_classes = [authentication.TokenAuthentication]
-#     permission_classes = [permissions.IsAuthenticated]
-
-#     def get(self, request, format=None):
-#         report_search_results = ReportSearchResult.objects.filter(user=request.user)
-#         serializer = ReportSearchResultSerializer(report_search_results, many=True)
-#         return Response(serializer.data)
-
-
 class AlertList(APIView):
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -84,36 +74,18 @@ class AlertList(APIView):
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
+
 #webscraper function to find report search results
 def webscrape(town, incident):
-    # os.environ['MOZ_HEADLESS'] = '1'
+    os.environ['MOZ_HEADLESS'] = '1'
     driver = webdriver.Firefox()
-
-    # driver = webdriver.PhantomJS('C:\Users\Prineet Singh\Desktop\searchschoolandincident\phantomjs-1.9.7-windows\phantomjs.exe')
 
     driver.get("https://www.google.com/")
     driver.find_element_by_xpath('/html/body/div[1]/div[3]/form/div[1]/div[1]/div[1]/div/div[2]/input').send_keys(town + ' ' + incident + Keys.ENTER)
 
-    # driver.
-    
-    # # results = driver.find_elements_by_css_selector('div.g')
-    # results = driver.find_elements_by_xpath("//div[@class='g']//div[@class='r']//a[not(@class)]");
-    # for result in results:
-    #     print(result.get_attribute("href"))
-    # # print(results)
-    # link1 = results[0].find_element_by_tag_name("a")
-    # link2 = results[1].find_element_by_tag_name("a")
-    # link3 = results[2].find_element_by_tag_name("a")
-    # href1 = link1.get_attribute("href")
-    # href2 = link2.get_attribute("href")
-    # href3 = link3.get_attribute("href")
-
     driver.implicitly_wait(20)
 
     allLinks = driver.find_elements_by_class_name('yuRUbf')
-    # href1= allLinks[0].get_attribute('href')
-    # href2 = allLinks[1].get_attribute('href')
-    # href3 = allLinks[2].get_attribute('href')
     link1 = allLinks[0].find_element_by_tag_name("a")
     link2 = allLinks[1].find_element_by_tag_name("a")
     link3 = allLinks[2].find_element_by_tag_name("a")
@@ -123,14 +95,12 @@ def webscrape(town, incident):
 
     driver.close()
 
-    # print(urlparse.parse_qs(urlparse.urlparse(href1).query)["q"])
     print(href1, href2, href3)
     print(allLinks)
 
-    # return urlparse.parse_qs(urlparse.urlparse(href1).query)["q"], urlparse.parse_qs(urlparse.urlparse(href2).query)["q"], urlparse.parse_qs(urlparse.urlparse(href3).query)["q"]
     return (href1, href2, href3)
 
-#function to create csv datasets with search headlines for kmeans clustering
+# function to create csv datasets with search headlines for kmeans clustering
 def createData(filePath, headlines):
     with open(filePath, 'w', newline='') as file:
         writer = csv.writer(file)
@@ -157,7 +127,7 @@ def findSource(word, headlines, sources):
         if word in headline.lower():
             return sources[intCtr]
 
-#function to initialize the User model
+# function to initialize the User model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -176,7 +146,7 @@ def createUser(request):
     return Response(status=status.HTTP_200_OK)
 
 
-#function to retrieve data from the User model fields
+# function to retrieve data from the User model fields
 @api_view(['GET'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -191,7 +161,7 @@ def getUserData(request):
     })
 
 
-#function to initialize the Report model
+# function to initialize the Report model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -235,10 +205,6 @@ def createReport(request):
     new_search3 = ReportSearchResult.objects.create(report=new_report, url=url3)
     new_search3.save()
 
-
-    # qstSearches = new_report.search_results
-    # serializer = ReportSearchResultSerializer(qstSearches, many=True)
-
     return Response(status=status.HTTP_201_CREATED)
 
 
@@ -256,7 +222,7 @@ def getReportData(request):
 
 
 
-#function to initialize the Alert model
+# function to initialize the Alert model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -287,7 +253,7 @@ def createAlert(request):
     return Response(status=status.HTTP_201_CREATED)
 
 
-#function to initialize the School model
+# function to initialize the School model
 @api_view(['POST'])
 @authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
@@ -309,7 +275,7 @@ def createSchool(request):
 
     createData(filePath, headlines)
 
-    #Following code is for clustering to find the most frequent types of safety issues in a school's city
+    # Following code is for clustering to find the most frequent types of safety issues in a school's city
     data = pd.read_csv("C:\\Users\\suchi\\Dropbox (Sandipan.com)\\Creative\\RitiCode\\PeddieHacks 2021\\django_peddiehacks\\extras\\datasets\\{}.csv".format(name), error_bad_lines=False, usecols =["headline_text"])
     print(data.head())
 
@@ -325,7 +291,7 @@ def createSchool(request):
     data[data['headline_text'].duplicated(keep=False)].sort_values('headline_text').head(8)
     data = data.drop_duplicates('headline_text')
 
-    #NLP:
+    # NLP:
     punc = ['.', ',', '"', "'", '?', '!', ':', ';', '(', ')', '[', ']', '{', '}',"%"]
     stop_words = text.ENGLISH_STOP_WORDS.union(punc)
     desc = data['headline_text'].values
@@ -336,14 +302,14 @@ def createSchool(request):
     print(len(word_features))
     print(word_features[5000:5100])
 
-    #Tokenizing
+    # Tokenizing
     stemmer = SnowballStemmer('english')
     tokenizer = RegexpTokenizer(r'[a-zA-Z\']+')
 
     def tokenize(text):
         return [stemmer.stem(word) for word in tokenizer.tokenize(text.lower())]
 
-    #Vectorization with stop words(words irrelevant to the model), stemming and tokenizing
+    # Vectorization with stop words(words irrelevant to the model), stemming and tokenizing
     vectorizer2 = TfidfVectorizer(stop_words = stop_words, tokenizer = tokenize)
     X2 = vectorizer2.fit_transform(desc)
     word_features2 = vectorizer2.get_feature_names()
@@ -354,7 +320,7 @@ def createSchool(request):
     X3 = vectorizer3.fit_transform(desc)
     words = vectorizer3.get_feature_names()
 
-    #K-means clustering
+    # K-means clustering
     from sklearn.cluster import KMeans
     wcss = []
     for i in range(1,11):
@@ -364,7 +330,7 @@ def createSchool(request):
 
     print(words[250:300])
 
-    #2 clusters
+    # 2 clusters
     kmeans = KMeans(n_clusters = 3, n_init = 20, n_jobs = 1) # n_init(number of iterations for clsutering) n_jobs(number of cpu cores to use)
     kmeans.fit(X3)
     # We look at the 2 clusters generated by k-means.
@@ -373,7 +339,7 @@ def createSchool(request):
     for num, centroid in enumerate(common_words):
         # print(words[centroid[0]])
         # print(str(num) + ' : ' + ', '.join(words[word] for word in centroid))
-        #print(words[word] for word in centroid)
+        # print(words[word] for word in centroid)
         lstWords = []
         for word in centroid:
             lstWords.append(words[word])

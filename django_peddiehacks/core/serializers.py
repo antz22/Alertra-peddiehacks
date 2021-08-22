@@ -31,10 +31,22 @@ class ReportTypeSerializer(serializers.ModelSerializer):
             'name',
         )
 
+class ReportSearchResultSerializer(serializers.ModelSerializer):
+    report_id = serializers.CharField(source='report.id')
+    class Meta:
+        model = ReportSearchResult
+        fields = (
+            'id',
+            'report_id',
+            'url',
+        )
+
+
 class ReportSerializer(serializers.ModelSerializer):
     report_type_name = serializers.CharField(source='report_type.name')
     school_name = serializers.CharField(source='school.name')
     time = serializers.DateTimeField(format="%d %b, %Y %H:%M%p")
+    search_results = ReportSearchResultSerializer(read_only=True, many=True)
     class Meta:
         model = Report
         fields = (
@@ -47,17 +59,9 @@ class ReportSerializer(serializers.ModelSerializer):
             'school_name',
             'time',
             'approved',
+            'search_results',
         )
 
-class ReportSearchResultSerializer(serializers.ModelSerializer):
-    report_name = serializers.CharField(source='report.name')
-    class Meta:
-        model = ReportSearchResult
-        fields = (
-            'id',
-            'report_name',
-            'url',
-        )
 
 class AlertSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(source='school.name')

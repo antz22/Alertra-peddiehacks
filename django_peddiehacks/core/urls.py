@@ -2,10 +2,8 @@ from django.urls import path, include
 from core import views
 
 urlpatterns = [
-    path('', views.index),
 	path('get-reports/', views.ReportList.as_view()),
 	path('get-report-types/', views.ReportTypeList.as_view()),
-    # path('get-report-search-result/', views.ReportSearchResultList.as_view()),
 	path('get-alerts/', views.AlertList.as_view()),
 	path('get-schools/', views.SchoolList.as_view()),
 	path('get-user-data/', views.getUserData),

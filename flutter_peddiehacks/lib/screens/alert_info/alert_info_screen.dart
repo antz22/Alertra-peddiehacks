@@ -212,11 +212,3 @@ class AlertInfoScreen extends StatelessWidget {
     }
   }
 }
-
-// if (priority == 'high') {
-
-// } else if (priority == 'medium') {
-
-// } else {
-
-// }

@@ -4,6 +4,7 @@ import 'package:flutter_peddiehacks/constants/constants.dart';
 import 'package:flutter_peddiehacks/models/report.dart';
 import 'package:flutter_peddiehacks/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ReportInfoScreen extends StatelessWidget {
   const ReportInfoScreen({Key? key, required this.report, this.role = ''})
@@ -99,18 +100,53 @@ class ReportInfoScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        SizedBox(height: kDefaultPadding),
+                        SizedBox(height: 1.2 * kDefaultPadding),
                       ],
                     )
                   : SizedBox.shrink(),
-              Text(
-                'Matching Search Results:',
-                style: TextStyle(
-                  fontSize: 17.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Matching Search Results:',
+                    style: TextStyle(
+                      fontSize: 17.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 0.7 * kDefaultPadding),
+                  GestureDetector(
+                    onTap: () => _launchUrl(context, report.search_results[0]),
+                    child: Text(
+                      report.search_results[0],
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 0.4 * kDefaultPadding),
+                  GestureDetector(
+                    onTap: () => _launchUrl(context, report.search_results[1]),
+                    child: Text(
+                      report.search_results[0],
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 0.4 * kDefaultPadding),
+                  GestureDetector(
+                    onTap: () => _launchUrl(context, report.search_results[2]),
+                    child: Text(
+                      report.search_results[2],
+                      style: TextStyle(
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: 3 * kDefaultPadding),
+              SizedBox(height: 2 * kDefaultPadding),
               role == 'Teacher'
                   ? report.approved
                       ? Row(
@@ -256,6 +292,14 @@ class ReportInfoScreen extends StatelessWidget {
           ),
         ],
       );
+    }
+  }
+
+  void _launchUrl(BuildContext context, String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      print('Error launching url');
     }
   }
 }
