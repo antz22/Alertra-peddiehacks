@@ -35,6 +35,7 @@ class APIServices {
     List<dynamic> data = json.decode(response.body);
     List<Report> reports =
         data.map((report) => Report.fromJson(report)).toList();
+    print(data);
     return reports;
   }
 
@@ -52,6 +53,7 @@ class APIServices {
     final response = await http.post(url, headers: headers, body: body);
     var data = json.decode(response.body);
     Report report = Report.fromJson(data);
+    print(data);
     return report;
   }
 
@@ -81,6 +83,7 @@ class APIServices {
     final url = Uri.parse(API_BASE_URL + '/api/v1/get-school-data/');
     final response = await http.get(url, headers: headers);
     var data = json.decode(response.body);
+    print(data);
     return data;
   }
 
@@ -89,7 +92,7 @@ class APIServices {
       String location,
       String priority,
       String report_type_name,
-      String filename,
+      String? filename,
       bool isEmergency) async {
     final storage = new FlutterSecureStorage();
     final token = await storage.read(key: 'restAPI');
@@ -119,12 +122,14 @@ class APIServices {
       request.fields['location'] = location;
       request.fields['priority'] = priority;
       request.fields['report_type_name'] = report_type_name;
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'picture',
-          filename,
-        ),
-      );
+      if (filename != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'picture',
+            filename,
+          ),
+        );
+      }
       var result = await request.send();
       return result.reasonPhrase!;
     }

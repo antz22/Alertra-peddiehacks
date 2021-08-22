@@ -143,7 +143,7 @@ class _NewReportPageState extends State<NewReportPage> {
                                   locationController.text,
                                   dropdownValue2.toLowerCase(),
                                   dropdownValue1,
-                                  file!.path,
+                                  file?.path,
                                   false);
 
                               setState(() {

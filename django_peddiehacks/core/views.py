@@ -377,10 +377,10 @@ def createSchool(request):
                     lstSources.append(findSource(word, headlines, sources))
     
     for src in lstSources:
-        new_source = Source.objets.create(school=new_school, source=src)
+        new_source = Source.objects.create(school=new_school, url=src)
         new_source.save()
     for word in lstKeyWords:
-        new_key_word = KeyWord.objects.create(school=new_school, key_word=word)
+        new_key_word = KeyWord.objects.create(school=new_school, word=word)
         new_key_word.save()
 
 

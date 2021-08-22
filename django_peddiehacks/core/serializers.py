@@ -9,17 +9,17 @@ class KeyWordSerializer(serializers.Serializer):
         model = KeyWord
         fields = (
             'id',
-            'key_word',
+            'school_id',
+            'word',
         )
 
 
 class SourceSerializer(serializers.Serializer):
     school_id = serializers.CharField(source='school.id')
     class Meta:
-        model = KeyWord
+        model = Source
         fields = (
-            'id',
-            'url',
+            '__all__'
         )
 
 class SchoolSerializer(serializers.ModelSerializer):
