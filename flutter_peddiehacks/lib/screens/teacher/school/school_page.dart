@@ -66,12 +66,14 @@ class _SchoolPageState extends State<SchoolPage> {
                   children: [
                     _buildInfoBubble(
                       context,
+                      true,
                       'Weapons',
                       'https://patch.com/new-jersey/hillsborough/montgomery-man-jailed-chasing-woman-kids-fake-gun-cops',
                     ),
                     SizedBox(width: 0.1 * MediaQuery.of(context).size.width),
                     _buildInfoBubble(
                       context,
+                      false,
                       'Drugs',
                       'https://dailyvoice.com/new-jersey/somerset/police-fire/busted-31-nabbed-14-pounds-of-coke-firearms-seized-in-massive-drug-distribution-scheme/812725/',
                     ),
@@ -83,6 +85,7 @@ class _SchoolPageState extends State<SchoolPage> {
                   children: [
                     _buildInfoBubble(
                       context,
+                      false,
                       'Assault',
                       'https://dailyvoice.com/new-jersey/burlington/police-fire/dangerous-south-jersey-fugitive-nabbed-after-assaulting-us-marshals-in-philadelphia/802388/',
                     ),
@@ -112,11 +115,16 @@ class _SchoolPageState extends State<SchoolPage> {
     );
   }
 
-  Container _buildInfoBubble(BuildContext context, String keyword, String url) {
+  Container _buildInfoBubble(
+      BuildContext context, bool large, String keyword, String url) {
     return Container(
       padding: EdgeInsets.all(kDefaultPadding),
-      width: 0.35 * MediaQuery.of(context).size.width,
-      height: 0.35 * MediaQuery.of(context).size.width,
+      width: large
+          ? 0.40 * MediaQuery.of(context).size.width
+          : 0.35 * MediaQuery.of(context).size.width,
+      height: large
+          ? 0.40 * MediaQuery.of(context).size.width
+          : 0.35 * MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white,
