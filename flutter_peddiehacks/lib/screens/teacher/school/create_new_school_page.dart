@@ -18,6 +18,8 @@ class _CreateNewSchoolPageState extends State<CreateNewSchoolPage> {
   final cityController = new TextEditingController();
   final stateController = new TextEditingController();
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,28 +29,36 @@ class _CreateNewSchoolPageState extends State<CreateNewSchoolPage> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(kDefaultPadding),
-        child: Column(
-          children: [
-            CustomTextField(controller: nameController, hintText: 'Name'),
-            SizedBox(height: kDefaultPadding),
-            CustomTextField(controller: addressController, hintText: 'Address'),
-            SizedBox(height: kDefaultPadding),
-            CustomTextField(controller: cityController, hintText: 'City'),
-            SizedBox(height: kDefaultPadding),
-            CustomTextField(controller: stateController, hintText: 'State'),
-            SizedBox(height: 2 * kDefaultPadding),
-            GestureDetector(
-              onTap: () async {
-                await context.read<APIServices>().createSchool(
-                    nameController.text,
-                    addressController.text,
-                    cityController.text,
-                    stateController.text);
-              },
-              child: CustomButton(purpose: 'other', text: 'CREATE'),
-            ),
-          ],
-        ),
+        child: _isLoading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  CustomTextField(controller: nameController, hintText: 'Name'),
+                  SizedBox(height: kDefaultPadding),
+                  CustomTextField(
+                      controller: addressController, hintText: 'Address'),
+                  SizedBox(height: kDefaultPadding),
+                  CustomTextField(controller: cityController, hintText: 'City'),
+                  SizedBox(height: kDefaultPadding),
+                  CustomTextField(
+                      controller: stateController, hintText: 'State'),
+                  SizedBox(height: 2 * kDefaultPadding),
+                  GestureDetector(
+                    onTap: () async {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await context.read<APIServices>().createSchool(
+                          nameController.text,
+                          addressController.text,
+                          cityController.text,
+                          stateController.text);
+                      Navigator.pop(context);
+                    },
+                    child: CustomButton(purpose: 'other', text: 'CREATE'),
+                  ),
+                ],
+              ),
       ),
     );
   }
