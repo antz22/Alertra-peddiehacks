@@ -29,6 +29,7 @@ import csv
 from urllib.parse import urlparse
 import os
 import csv
+import sys
 
 from pygooglenews import GoogleNews
 
@@ -101,16 +102,15 @@ def webscrape(town, incident):
 
 # function to create csv datasets with search headlines for kmeans clustering
 def createData(filePath, headlines):
-    try:
-        with open(filePath, 'w', newline='') as file:
-            writer = csv.writer(file)
-            writer.writerow(["index", "headline_text"])
-            for index, headline in enumerate(headlines):
-                writer.writerow([index, headline])
-                print(index, headline)
-    except:
-        print('Error')
-    
+    print(filePath)
+    print(headlines)
+    with open(filePath, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["index", "headline_text"])
+        for index, headline in enumerate(headlines):
+            writer.writerow([index, headline])
+            print(index, headline)
+
 
 
 # Find safety related news for given city and state from Google News
@@ -288,7 +288,8 @@ def createSchool(request):
     new_school = School.objects.create(name=name, address=address, city=city, state=state)
     new_school.save()
     
-    filePath = 'django_peddiehacks\\extras\\datasets\\{}.csv'.format(name)
+    # filePath = 'django_peddiehacks\\extras\\datasets\\{}.csv'.format(name)
+    filePath = 'django_peddiehacks/extras/datasets/{}.csv'.format(name)
     headlines, sources = findSafetyNews(city, state)
     print(headlines)
     print(sources)
