@@ -71,29 +71,47 @@ class _SchoolPageState extends State<SchoolPage> {
                           data['key_words'][0].substring(1).toLowerCase(),
                       data['sources'][0],
                     ),
-                    SizedBox(width: 0.1 * MediaQuery.of(context).size.width),
-                    _buildInfoBubble(
-                      context,
-                      false,
-                      data['key_words'][1][0].toUpperCase() +
-                          data['key_words'][1].substring(1).toLowerCase(),
-                      data['sources'][1],
-                    ),
+                    data['key_words'].length > 2
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                  width:
+                                      0.1 * MediaQuery.of(context).size.width),
+                              _buildInfoBubble(
+                                context,
+                                false,
+                                data['key_words'][1][0].toUpperCase() +
+                                    data['key_words'][1]
+                                        .substring(1)
+                                        .toLowerCase(),
+                                data['sources'][1],
+                              ),
+                            ],
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
-                Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildInfoBubble(
-                      context,
-                      false,
-                      data['key_words'][2][0].toUpperCase() +
-                          data['key_words'][2].substring(1).toLowerCase(),
-                      data['sources'][2],
-                    ),
-                  ],
-                ),
+                data['key_words'] == 3
+                    ? Column(
+                        children: [
+                          Spacer(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _buildInfoBubble(
+                                context,
+                                false,
+                                data['key_words'][2][0].toUpperCase() +
+                                    data['key_words'][2]
+                                        .substring(1)
+                                        .toLowerCase(),
+                                data['sources'][2],
+                              ),
+                            ],
+                          ),
+                        ],
+                      )
+                    : SizedBox.shrink(),
                 Spacer(),
                 GestureDetector(
                   onTap: () => Navigator.push(
