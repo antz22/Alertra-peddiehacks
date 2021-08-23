@@ -67,15 +67,17 @@ class _SchoolPageState extends State<SchoolPage> {
                     _buildInfoBubble(
                       context,
                       true,
-                      'Weapons',
-                      'https://patch.com/new-jersey/hillsborough/montgomery-man-jailed-chasing-woman-kids-fake-gun-cops',
+                      data['key_words'][0][0].toUpperCase() +
+                          data['key_words'][0].substring(1).toLowerCase(),
+                      data['sources'][0],
                     ),
                     SizedBox(width: 0.1 * MediaQuery.of(context).size.width),
                     _buildInfoBubble(
                       context,
                       false,
-                      'Drugs',
-                      'https://dailyvoice.com/new-jersey/somerset/police-fire/busted-31-nabbed-14-pounds-of-coke-firearms-seized-in-massive-drug-distribution-scheme/812725/',
+                      data['key_words'][1][0].toUpperCase() +
+                          data['key_words'][1].substring(1).toLowerCase(),
+                      data['sources'][1],
                     ),
                   ],
                 ),
@@ -86,8 +88,9 @@ class _SchoolPageState extends State<SchoolPage> {
                     _buildInfoBubble(
                       context,
                       false,
-                      'Assault',
-                      'https://dailyvoice.com/new-jersey/burlington/police-fire/dangerous-south-jersey-fugitive-nabbed-after-assaulting-us-marshals-in-philadelphia/802388/',
+                      data['key_words'][2][0].toUpperCase() +
+                          data['key_words'][2].substring(1).toLowerCase(),
+                      data['sources'][2],
                     ),
                   ],
                 ),

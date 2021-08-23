@@ -4,29 +4,31 @@ from .models import Report, ReportType, Alert, ReportSearchResult, User, School,
 
 
 class KeyWordSerializer(serializers.Serializer):
-    school_id = serializers.CharField(source='school.id')
+    school_name = serializers.CharField(source='school.name')
     class Meta:
         model = KeyWord
         fields = (
             'id',
-            'school_id',
+            'school_name',
             'word',
         )
 
 
 class SourceSerializer(serializers.Serializer):
-    school_id = serializers.CharField(source='school.id')
+    school_name = serializers.CharField(source='school.name')
     class Meta:
         model = Source
         fields = (
             'id',
-            'school_id',
+            'school_name',
             'url',
         )
 
 class SchoolSerializer(serializers.ModelSerializer):
-    # sources = SourceSerializer(read_only=True, many=True)
-    # key_words = KeyWordSerializer(read_only=True, many=True)
+    sources = serializers.StringRelatedField(many=True)
+    key_words = serializers.StringRelatedField(many=True)
+    # sources = SourceSerializer(many=True)
+    # key_words = KeyWordSerializer(many=True)
     class Meta:
         model = School
         fields = (
@@ -35,8 +37,8 @@ class SchoolSerializer(serializers.ModelSerializer):
             'address',
             'city',
             'state',
-            # 'sources',
-            # 'key_words',
+            'sources',
+            'key_words',
         )
 
 class UserDataSerializer(serializers.ModelSerializer):

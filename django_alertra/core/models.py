@@ -18,9 +18,15 @@ class Source(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True, related_name='sources')
     url = models.URLField(max_length=200)
 
+    def __str__(self):
+        return f"{self.url}"
+
 class KeyWord(models.Model):
     school = models.ForeignKey(School, on_delete=models.CASCADE, null=True, blank=True, related_name='key_words')
     word = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f"{self.word}"
 
 class User(AbstractUser):
     # teacher, student
@@ -62,6 +68,9 @@ class Report(models.Model):
 class ReportSearchResult(models.Model):
     report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name='search_results')
     url = models.URLField(max_length=200)
+
+    def __str__(self):
+        return f"{self.url} ({self.report}"
 
 
 class Alert(models.Model):
