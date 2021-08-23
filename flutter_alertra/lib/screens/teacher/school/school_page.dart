@@ -71,7 +71,7 @@ class _SchoolPageState extends State<SchoolPage> {
                           data['key_words'][0].substring(1).toLowerCase(),
                       data['sources'][0],
                     ),
-                    data['key_words'].length > 2
+                    data['key_words'].length > 1
                         ? Column(
                             children: [
                               SizedBox(
