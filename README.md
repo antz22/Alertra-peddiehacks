@@ -1,7 +1,7 @@
 <br />
 
 <p align="middle">
-    <img src="https://github.com/antz22/Alertra/blob/master/assets/logo.svg" width="10%">
+    <img src="https://github.com/antz22/Alertra/blob/master/assets/logo.svg" width="10%" style="margin-bottom:0;">
     <h1 align="center">Alertra</h1>
 </p>
 
