@@ -1,8 +1,11 @@
 <br />
 
 <p align="middle">
-    <img src="https://github.com/antz22/Alertra/blob/master/assets/logo.svg" width="20%">
-    <h1>Alertra</h1>
+    <img src="https://github.com/antz22/Alertra/blob/master/assets/logo.svg" width="10%">
+</p>
+
+<p align="middle">
+  <h1>Alertra</h1>
 </p>
 
 <br />
