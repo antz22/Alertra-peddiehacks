@@ -1,12 +1,12 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/models/report.dart';
-import 'package:flutter_peddiehacks/screens/report_info/report_info_screen.dart';
+import 'package:flutter_alertra/models/report.dart';
+import 'package:flutter_alertra/screens/report_info/report_info_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/models/alert.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/models/alert.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
 
 class AlertInfoScreen extends StatelessWidget {

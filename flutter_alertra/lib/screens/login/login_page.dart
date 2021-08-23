@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/screens/student/home/student_home_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/home/teacher_home_page.dart';
-import 'package:flutter_peddiehacks/services/authentication_service.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/custom_textfield.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/screens/student/home/student_home_page.dart';
+import 'package:flutter_alertra/screens/teacher/home/teacher_home_page.dart';
+import 'package:flutter_alertra/services/authentication_service.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/custom_textfield.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

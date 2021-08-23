@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_peddiehacks/screens/student/home/student_home_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/home/teacher_home_page.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
-import 'package:flutter_peddiehacks/services/authentication_service.dart';
+import 'package:flutter_alertra/screens/student/home/student_home_page.dart';
+import 'package:flutter_alertra/screens/teacher/home/teacher_home_page.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
+import 'package:flutter_alertra/services/authentication_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';

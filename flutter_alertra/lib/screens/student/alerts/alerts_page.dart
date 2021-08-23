@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/models/alert.dart';
-import 'package:flutter_peddiehacks/screens/alert_info/alert_info_screen.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
-import 'package:flutter_peddiehacks/widgets/page_banner.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/models/alert.dart';
+import 'package:flutter_alertra/screens/alert_info/alert_info_screen.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
+import 'package:flutter_alertra/widgets/page_banner.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 

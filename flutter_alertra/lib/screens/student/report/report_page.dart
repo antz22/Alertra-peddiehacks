@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/screens/student/emergency_report/emergency_report_page.dart';
-import 'package:flutter_peddiehacks/screens/student/new_report/new_report_page.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/page_banner.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/screens/student/emergency_report/emergency_report_page.dart';
+import 'package:flutter_alertra/screens/student/new_report/new_report_page.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/page_banner.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);

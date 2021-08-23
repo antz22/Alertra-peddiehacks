@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_page.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/page_banner.dart';
+import 'package:flutter_alertra/screens/teacher/send_alert/send_alert_page.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/page_banner.dart';
 
 class SendAlertNav extends StatelessWidget {
   const SendAlertNav({Key? key}) : super(key: key);

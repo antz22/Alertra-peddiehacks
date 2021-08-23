@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/screens/student/home/student_home_page.dart';
-import 'package:flutter_peddiehacks/widgets/custom_dropdown.dart';
+import 'package:flutter_alertra/screens/student/home/student_home_page.dart';
+import 'package:flutter_alertra/widgets/custom_dropdown.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/custom_textfield.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/custom_textfield.dart';
 
 class NewReportPage extends StatefulWidget {
   const NewReportPage({Key? key}) : super(key: key);

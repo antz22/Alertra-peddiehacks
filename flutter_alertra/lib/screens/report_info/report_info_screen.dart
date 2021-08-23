@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/models/report.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/models/report.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 

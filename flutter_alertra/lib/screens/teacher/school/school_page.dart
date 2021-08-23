@@ -1,11 +1,11 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/screens/teacher/school/create_new_school_page.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/screens/teacher/school/create_new_school_page.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/page_banner.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/page_banner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 

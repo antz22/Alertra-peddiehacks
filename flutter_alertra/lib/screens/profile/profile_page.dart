@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
+import 'package:flutter_alertra/constants/constants.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/screens/landing_page/landing_page.dart';
-import 'package:flutter_peddiehacks/services/authentication_service.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/page_banner.dart';
+import 'package:flutter_alertra/screens/landing_page/landing_page.dart';
+import 'package:flutter_alertra/services/authentication_service.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/page_banner.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {

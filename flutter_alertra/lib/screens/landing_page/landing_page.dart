@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/screens/login/login_page.dart';
-import 'package:flutter_peddiehacks/screens/sign_up/sign_up.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/screens/login/login_page.dart';
+import 'package:flutter_alertra/screens/sign_up/sign_up.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
 import 'package:flutter_svg/svg.dart';
 
 class LandingPage extends StatelessWidget {

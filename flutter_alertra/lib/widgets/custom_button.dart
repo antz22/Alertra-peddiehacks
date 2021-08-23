@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
+import 'package:flutter_alertra/constants/constants.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({

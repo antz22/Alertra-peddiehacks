@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/screens/profile/profile_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/feed/feed_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/school/school_page.dart';
-import 'package:flutter_peddiehacks/screens/teacher/send_alert/send_alert_nav.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/screens/profile/profile_page.dart';
+import 'package:flutter_alertra/screens/teacher/feed/feed_page.dart';
+import 'package:flutter_alertra/screens/teacher/school/school_page.dart';
+import 'package:flutter_alertra/screens/teacher/send_alert/send_alert_nav.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TeacherHomePage extends StatefulWidget {

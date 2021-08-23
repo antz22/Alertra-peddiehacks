@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_peddiehacks/constants/constants.dart';
-import 'package:flutter_peddiehacks/services/APIServices.dart';
-import 'package:flutter_peddiehacks/widgets/custom_button.dart';
-import 'package:flutter_peddiehacks/widgets/custom_textfield.dart';
+import 'package:flutter_alertra/constants/constants.dart';
+import 'package:flutter_alertra/services/APIServices.dart';
+import 'package:flutter_alertra/widgets/custom_button.dart';
+import 'package:flutter_alertra/widgets/custom_textfield.dart';
 
 class CreateNewSchoolPage extends StatefulWidget {
   const CreateNewSchoolPage({Key? key}) : super(key: key);
