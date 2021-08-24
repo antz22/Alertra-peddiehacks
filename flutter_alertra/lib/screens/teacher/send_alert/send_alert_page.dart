@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_alertra/models/report.dart';
 import 'package:flutter_alertra/widgets/custom_dropdown.dart';
@@ -16,27 +18,42 @@ class SendAlertPage extends StatefulWidget {
 }
 
 class _SendAlertPageState extends State<SendAlertPage> {
-  final recipientsController = new TextEditingController();
-  final headlineController = new TextEditingController();
-  final contentController = new TextEditingController();
+  final headlineController = TextEditingController();
+  final contentController = TextEditingController();
 
-  String dropdownValue1 = 'All';
-  List<String> items1 = ['All', 'Teachers', 'Students'];
+  String recipient = 'All';
+  List<String> recipients = ['All', 'Teachers', 'Students'];
 
-  String dropdownValue2 = 'Low';
-  List<String> items2 = ['Low', 'Medium', 'High'];
+  String priority = 'Low';
+  List<String> priorities = ['Low', 'Medium', 'High'];
 
-  String dropdownValue3 = '';
-  List<String> items3 = new List.from([]);
+  String dropdownReport = '';
+  List<String> dropdownReports = new List.from([]);
 
-  Future<List<dynamic>?> _loadReports() async {
-    List<dynamic>? reports =
-        await context.read<APIServices>().retrieveReports();
-    items3 = reports!.map((report) {
-      return '${report.report_type} Report (${report.time})';
-    }).toList();
-    dropdownValue3 = items3[0];
-    return reports;
+  List<Report> reports = new List.from([]);
+
+  Future<String> _loadReports() async {
+    try {
+      reports =
+          await context.read<APIServices>().retrieveReports() as List<Report>;
+      dropdownReports = reports.map((report) {
+        return '${report.report_type} Report (${report.time})';
+      }).toList();
+      dropdownReports.insert(0, '(None)');
+      dropdownReport = dropdownReports[0];
+      return 'Success';
+    } catch (e) {
+      print(e.toString());
+      return e.toString();
+    }
+  }
+
+  late Future<String> future;
+
+  @override
+  void initState() {
+    super.initState();
+    future = _loadReports();
   }
 
   @override
@@ -48,10 +65,9 @@ class _SendAlertPageState extends State<SendAlertPage> {
           children: [
             PageBanner(text: 'Send an Alert'),
             FutureBuilder(
-              future: _loadReports(),
+              future: future,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  List<Report> reports = snapshot.data as List<Report>;
                   return Padding(
                     padding: EdgeInsets.only(
                         left: kDefaultPadding, right: kDefaultPadding),
@@ -71,7 +87,10 @@ class _SendAlertPageState extends State<SendAlertPage> {
                             ),
                             SizedBox(height: 0.7 * kDefaultPadding),
                             CustomDropdown(
-                                dropdownValue: dropdownValue1, items: items1),
+                              updateFunction: updateRecipient,
+                              dropdownValue: recipient,
+                              items: recipients,
+                            ),
                             SizedBox(height: 1.5 * kDefaultPadding),
                             Text(
                               'Head Line',
@@ -104,7 +123,10 @@ class _SendAlertPageState extends State<SendAlertPage> {
                             ),
                             SizedBox(height: 0.7 * kDefaultPadding),
                             CustomDropdown(
-                                dropdownValue: dropdownValue2, items: items2),
+                              updateFunction: updatePriority,
+                              dropdownValue: priority,
+                              items: priorities,
+                            ),
                             SizedBox(height: 1.5 * kDefaultPadding),
                             Text(
                               'Link Student Report',
@@ -115,20 +137,25 @@ class _SendAlertPageState extends State<SendAlertPage> {
                             ),
                             SizedBox(height: 0.7 * kDefaultPadding),
                             CustomDropdown(
-                                dropdownValue: dropdownValue3,
-                                items: items3,
-                                isExpanded: true),
+                              updateFunction: updateReport,
+                              dropdownValue: dropdownReport,
+                              items: dropdownReports,
+                              isExpanded: true,
+                            ),
                           ],
                         ),
                         SizedBox(height: 3 * kDefaultPadding),
                         GestureDetector(
                           onTap: () async {
                             await context.read<APIServices>().createAlert(
-                                  dropdownValue1,
+                                  recipient,
                                   headlineController.text,
                                   contentController.text,
-                                  dropdownValue2.toLowerCase(),
-                                  reports[items3.indexOf(dropdownValue3)],
+                                  priority.toLowerCase(),
+                                  dropdownReport != '(None)'
+                                      ? reports[dropdownReports
+                                          .indexOf(dropdownReport)]
+                                      : null,
                                 );
                             Navigator.pop(context);
                           },
@@ -147,5 +174,24 @@ class _SendAlertPageState extends State<SendAlertPage> {
         ),
       ),
     );
+  }
+
+  void updateRecipient(String newRecipient) {
+    setState(() {
+      recipient = newRecipient;
+    });
+  }
+
+  void updatePriority(String newPriority) {
+    setState(() {
+      priority = newPriority;
+    });
+    print(priority);
+  }
+
+  void updateReport(String newReport) {
+    setState(() {
+      dropdownReport = newReport;
+    });
   }
 }

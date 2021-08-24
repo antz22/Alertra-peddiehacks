@@ -40,7 +40,7 @@ class ReportList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        reports = Report.objects.all()
+        reports = Report.objects.filter(school=request.user.school)
         serializer = ReportSerializer(reports, many=True)
         return Response(serializer.data)
 
@@ -70,7 +70,7 @@ class AlertList(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, format=None):
-        alerts = Alert.objects.filter(recipient=request.user.role)
+        alerts = Alert.objects.filter(recipient=request.user.role, school=request.user.school)
         serializer = AlertSerializer(alerts, many=True)
         return Response(serializer.data)
 
@@ -218,12 +218,16 @@ def createReport(request):
     except: 
         url1, url2, url3 = webscrape(school.city, description)
 
-    new_search1 = ReportSearchResult.objects.create(report=new_report, url=url1)
-    new_search1.save()
-    new_search2 = ReportSearchResult.objects.create(report=new_report, url=url2)
-    new_search2.save()
-    new_search3 = ReportSearchResult.objects.create(report=new_report, url=url3)
-    new_search3.save()
+    try:
+        new_search1 = ReportSearchResult.objects.create(report=new_report, url=url1)
+        new_search1.save()
+        new_search2 = ReportSearchResult.objects.create(report=new_report, url=url2)
+        new_search2.save()
+        new_search3 = ReportSearchResult.objects.create(report=new_report, url=url3)
+        new_search3.save()
+    except:
+        # no matching results
+        pass
 
     return Response(status=status.HTTP_201_CREATED)
 
@@ -254,17 +258,33 @@ def createAlert(request):
     head_line = data['headline']
     content = data['content']
     recipient = data['recipient']
-    report_id = data['report_id']
+    priority = data['priority']
     school = School.objects.get(name=user.school.name)
-    report = Report.objects.get(id=report_id)
 
-    if recipient == 'All':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report)
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report)
-    elif recipient == 'Teachers':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report)
-    elif recipient == 'Students':
-        new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report)
+    try: 
+        report_id = data['report_id']
+        report = Report.objects.get(id=report_id)
+
+        if recipient == 'All':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report, priority=priority)
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report, priority=priority)
+        elif recipient == 'Teachers':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, linked_report=report, priority=priority)
+        elif recipient == 'Students':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, linked_report=report, priority=priority)
+
+    except:
+
+        # no linked report
+
+        if recipient == 'All':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, priority=priority)
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, priority=priority)
+        elif recipient == 'Teachers':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Teacher', school=school, priority=priority)
+        elif recipient == 'Students':
+            new_alert = Alert.objects.create(user=user, head_line=head_line, content=content, recipient='Student', school=school, priority=priority)
+
 
 
     new_alert.save()
@@ -293,7 +313,9 @@ def createSchool(request):
     # filePath = 'django_peddiehacks\\extras\\datasets\\{}.csv'.format(name)
     filePath = 'django_peddiehacks/extras/datasets/{}.csv'.format(name)
     headlines, sources = findSafetyNews(city, state)
+    print('HEADLINES: ')
     print(headlines)
+    print('SOURCES:')
     print(sources)
 
     # Following code is for clustering to find the most frequent types of safety issues in a school's city
@@ -321,7 +343,9 @@ def createSchool(request):
     X = vectorizer.fit_transform(desc)
 
     word_features = vectorizer.get_feature_names()
+    print('LENGTH OF WORD FEATURES:')
     print(len(word_features))
+    print('WORD FEATURES')
     print(word_features[5000:5100])
 
     # Tokenizing
@@ -335,7 +359,9 @@ def createSchool(request):
     vectorizer2 = TfidfVectorizer(stop_words = stop_words, tokenizer = tokenize)
     X2 = vectorizer2.fit_transform(desc)
     word_features2 = vectorizer2.get_feature_names()
+    print('LENGTH OF WORD FEATURES 2:')
     print(len(word_features2))
+    print('WORD FEATURES 2')
     print(word_features2[:50]) 
 
     vectorizer3 = TfidfVectorizer(stop_words = stop_words, tokenizer = tokenize, max_features = 1000)
@@ -343,13 +369,13 @@ def createSchool(request):
     words = vectorizer3.get_feature_names()
 
     # K-means clustering
-    from sklearn.cluster import KMeans
     wcss = []
     for i in range(1,11):
         kmeans = KMeans(n_clusters=i,init='k-means++',max_iter=300,n_init=10,random_state=0)
         kmeans.fit(X3)
         wcss.append(kmeans.inertia_)
 
+    print('K-MEANS CLUSTERING WORDS:')
     print(words[250:300])
 
     # 2 clusters
@@ -383,6 +409,10 @@ def createSchool(request):
         new_key_word = KeyWord.objects.create(school=new_school, word=word)
         new_key_word.save()
 
+    print('FINAL SOURCES')
+    print(lstSources)
+    print('FINAL WORDS')
+    print(lstKeyWords)
 
     return Response(status=status.HTTP_201_CREATED)  
 

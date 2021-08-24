@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_alertra/screens/student/home/student_home_page.dart';
 import 'package:flutter_alertra/widgets/custom_dropdown.dart';
@@ -22,24 +24,30 @@ class _NewReportPageState extends State<NewReportPage> {
 
   bool _isLoading = false;
 
-  String dropdownValue1 = '';
-  List<String> items1 = new List.from([]);
+  String reportType = '';
+  List<String> reportTypes = new List.from([]);
 
-  String dropdownValue2 = 'Low';
-  List<String> items2 = ['Low', 'Medium', 'High'];
+  String priority = 'Low';
+  List<String> priorities = ['Low', 'Medium', 'High'];
 
   var file;
 
+  late Future<String> future;
+
   Future<String> _retrieveReportTypes() async {
     try {
-      List<String> reportTypes =
-          await context.read<APIServices>().retrieveReportTypes();
-      items1 = reportTypes;
-      dropdownValue1 = items1[0];
+      reportTypes = await context.read<APIServices>().retrieveReportTypes();
+      reportType = reportTypes[0];
       return 'Success';
     } catch (e) {
       return e.toString();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    future = _retrieveReportTypes();
   }
 
   @override
@@ -57,7 +65,7 @@ class _NewReportPageState extends State<NewReportPage> {
                   left: kDefaultPadding,
                   right: kDefaultPadding),
               child: FutureBuilder(
-                future: _retrieveReportTypes(),
+                future: future,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data == 'Success') {
                     return SingleChildScrollView(
@@ -74,7 +82,10 @@ class _NewReportPageState extends State<NewReportPage> {
                             ),
                           ),
                           CustomDropdown(
-                              dropdownValue: dropdownValue1, items: items1),
+                            updateFunction: updateReportType,
+                            dropdownValue: reportType,
+                            items: reportTypes,
+                          ),
                           SizedBox(height: 1.5 * kDefaultPadding),
                           Text(
                             'Describe the incident you wish to report.',
@@ -110,7 +121,10 @@ class _NewReportPageState extends State<NewReportPage> {
                           ),
                           SizedBox(height: 0.7 * kDefaultPadding),
                           CustomDropdown(
-                              dropdownValue: dropdownValue2, items: items2),
+                            updateFunction: updatePriority,
+                            dropdownValue: priority,
+                            items: priorities,
+                          ),
                           SizedBox(height: 1.5 * kDefaultPadding),
                           Row(
                             children: [
@@ -141,14 +155,11 @@ class _NewReportPageState extends State<NewReportPage> {
                               await context.read<APIServices>().createReport(
                                   descController.text,
                                   locationController.text,
-                                  dropdownValue2.toLowerCase(),
-                                  dropdownValue1,
+                                  priority.toLowerCase(),
+                                  reportType,
                                   file?.path,
                                   false);
 
-                              setState(() {
-                                _isLoading = false;
-                              });
                               Navigator.pop(context);
                             },
                             child:
@@ -165,5 +176,17 @@ class _NewReportPageState extends State<NewReportPage> {
               ),
             ),
     );
+  }
+
+  void updatePriority(String newPriority) {
+    setState(() {
+      priority = newPriority;
+    });
+  }
+
+  void updateReportType(String newReportType) {
+    setState(() {
+      reportType = newReportType;
+    });
   }
 }

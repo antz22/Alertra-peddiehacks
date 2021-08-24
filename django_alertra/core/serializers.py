@@ -72,7 +72,7 @@ class ReportSearchResultSerializer(serializers.ModelSerializer):
 class ReportSerializer(serializers.ModelSerializer):
     report_type_name = serializers.CharField(source='report_type.name')
     school_name = serializers.CharField(source='school.name')
-    time = serializers.DateTimeField(format="%d %b, %Y %H:%M%p")
+    time = serializers.DateTimeField(format="%I:%M%p %d %b, %Y")
     search_results = ReportSearchResultSerializer(read_only=True, many=True)
     class Meta:
         model = Report
@@ -92,7 +92,8 @@ class ReportSerializer(serializers.ModelSerializer):
 
 class AlertSerializer(serializers.ModelSerializer):
     school_name = serializers.CharField(source='school.name')
-    report_id = serializers.IntegerField(source='linked_report.id')
+    report_id = serializers.IntegerField(source='linked_report.id', required=False)
+    time = serializers.DateTimeField(format="%I:%M%p %d %b, %Y")
     class Meta:
         model = Alert
         fields = (

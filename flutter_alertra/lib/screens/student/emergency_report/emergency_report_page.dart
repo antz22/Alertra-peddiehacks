@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_alertra/widgets/custom_dropdown.dart';
 import 'package:flutter_alertra/widgets/custom_textfield.dart';
@@ -14,22 +16,28 @@ class EmergencyReportPage extends StatefulWidget {
 }
 
 class _EmergencyReportPageState extends State<EmergencyReportPage> {
-  final descController = new TextEditingController();
+  final descController = TextEditingController();
 
   bool _isLoading = false;
-  String dropdownValue = '';
-  List<String> items = new List.from([]);
+  String reportType = '';
+  List<String> reportTypes = new List.from([]);
+
+  late Future<String> future;
 
   Future<String> _retrieveReportTypes() async {
     try {
-      List<String> reportTypes =
-          await context.read<APIServices>().retrieveReportTypes();
-      items = reportTypes;
-      dropdownValue = items[0];
+      reportTypes = await context.read<APIServices>().retrieveReportTypes();
+      reportType = reportTypes[0];
       return 'Success';
     } catch (e) {
       return e.toString();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    future = _retrieveReportTypes();
   }
 
   @override
@@ -47,7 +55,7 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
                   left: kDefaultPadding,
                   right: kDefaultPadding),
               child: FutureBuilder(
-                future: _retrieveReportTypes(),
+                future: future,
                 builder: (context, snapshot) {
                   if (snapshot.hasData && snapshot.data == 'Success') {
                     return SingleChildScrollView(
@@ -66,7 +74,10 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
                           SizedBox(height: 2 * kDefaultPadding),
                           Text('What is the type of your emergency?'),
                           CustomDropdown(
-                              dropdownValue: dropdownValue, items: items),
+                            updateFunction: updateReportType,
+                            dropdownValue: reportType,
+                            items: reportTypes,
+                          ),
                           SizedBox(height: 1.5 * kDefaultPadding),
                           Text(
                             'Describe the incident you wish to report.',
@@ -91,13 +102,9 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
                                     descController.text,
                                     '',
                                     'high',
-                                    dropdownValue,
+                                    reportType,
                                     '',
                                     true);
-
-                                setState(() {
-                                  _isLoading = false;
-                                });
                                 Navigator.pop(context);
                               },
                               child: CustomButton(
@@ -116,5 +123,11 @@ class _EmergencyReportPageState extends State<EmergencyReportPage> {
               ),
             ),
     );
+  }
+
+  void updateReportType(String newReportType) {
+    setState(() {
+      reportType = newReportType;
+    });
   }
 }

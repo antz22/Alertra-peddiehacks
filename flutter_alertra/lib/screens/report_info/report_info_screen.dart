@@ -6,19 +6,29 @@ import 'package:flutter_alertra/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReportInfoScreen extends StatelessWidget {
-  const ReportInfoScreen({Key? key, required this.report, this.role = ''})
-      : super(key: key);
+class ReportInfoScreen extends StatefulWidget {
+  const ReportInfoScreen({
+    Key? key,
+    required this.report,
+    this.role = '',
+    required this.refresh,
+  }) : super(key: key);
 
   final String role;
   final Report report;
+  final Function refresh;
 
+  @override
+  _ReportInfoScreenState createState() => _ReportInfoScreenState();
+}
+
+class _ReportInfoScreenState extends State<ReportInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
-        title: Text('Student Report (${report.report_type})'),
+        title: Text('Student Report (${widget.report.report_type})'),
       ),
       body: Padding(
         padding: EdgeInsets.all(kDefaultPadding),
@@ -27,10 +37,10 @@ class ReportInfoScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildPriorityInfo(report.priority),
+              _buildPriorityInfo(widget.report.priority),
               SizedBox(height: kDefaultPadding),
               Text(
-                '${report.report_type} Report',
+                '${widget.report.report_type} Report',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 21.0,
@@ -38,7 +48,7 @@ class ReportInfoScreen extends StatelessWidget {
               ),
               SizedBox(height: kDefaultPadding),
               Text(
-                report.description,
+                widget.report.description,
                 style: TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 17.0,
@@ -46,9 +56,9 @@ class ReportInfoScreen extends StatelessWidget {
               ),
               SizedBox(height: kDefaultPadding),
               Text(
-                report.time,
+                widget.report.time,
                 style: TextStyle(
-                  color: Colors.grey.shade700,
+                  color: Colors.grey.shade500,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w400,
                 ),
@@ -66,14 +76,14 @@ class ReportInfoScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    report.school,
+                    widget.report.school,
                     style: TextStyle(
                       color: Colors.grey.shade500,
                     ),
                   ),
                   SizedBox(height: 0.3 * kDefaultPadding),
                   Text(
-                    report.location,
+                    widget.report.location,
                     style: TextStyle(
                       fontSize: 18.0,
                     ),
@@ -81,7 +91,7 @@ class ReportInfoScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 1.5 * kDefaultPadding),
-              report.picture_url != ''
+              widget.report.picture_url != ''
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -96,7 +106,8 @@ class ReportInfoScreen extends StatelessWidget {
                         Container(
                           child: ClipRRect(
                             child: Image(
-                              image: NetworkImage('${report.picture_url}'),
+                              image:
+                                  NetworkImage('${widget.report.picture_url}'),
                             ),
                           ),
                         ),
@@ -104,51 +115,56 @@ class ReportInfoScreen extends StatelessWidget {
                       ],
                     )
                   : SizedBox.shrink(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Matching Search Results:',
-                    style: TextStyle(
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 0.7 * kDefaultPadding),
-                  GestureDetector(
-                    onTap: () => _launchUrl(context, report.search_results[0]),
-                    child: Text(
-                      report.search_results[0],
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 0.4 * kDefaultPadding),
-                  GestureDetector(
-                    onTap: () => _launchUrl(context, report.search_results[1]),
-                    child: Text(
-                      report.search_results[0],
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 0.4 * kDefaultPadding),
-                  GestureDetector(
-                    onTap: () => _launchUrl(context, report.search_results[2]),
-                    child: Text(
-                      report.search_results[2],
-                      style: TextStyle(
-                        color: kPrimaryColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              widget.report.search_results.length != 0
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Matching Search Results:',
+                          style: TextStyle(
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 0.7 * kDefaultPadding),
+                        GestureDetector(
+                          onTap: () => _launchUrl(
+                              context, widget.report.search_results[0]),
+                          child: Text(
+                            widget.report.search_results[0],
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 0.4 * kDefaultPadding),
+                        GestureDetector(
+                          onTap: () => _launchUrl(
+                              context, widget.report.search_results[1]),
+                          child: Text(
+                            widget.report.search_results[0],
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 0.4 * kDefaultPadding),
+                        GestureDetector(
+                          onTap: () => _launchUrl(
+                              context, widget.report.search_results[2]),
+                          child: Text(
+                            widget.report.search_results[2],
+                            style: TextStyle(
+                              color: kPrimaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink(),
               SizedBox(height: 2 * kDefaultPadding),
-              role == 'Teacher'
-                  ? report.approved
+              widget.role == 'Teacher'
+                  ? widget.report.approved
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -169,7 +185,7 @@ class ReportInfoScreen extends StatelessWidget {
                                 onTap: () async {
                                   await context
                                       .read<APIServices>()
-                                      .deleteReport(report.id);
+                                      .deleteReport(widget.report.id);
                                   Navigator.pop(context);
                                 },
                                 child: Container(
@@ -206,8 +222,12 @@ class ReportInfoScreen extends StatelessWidget {
                                 onTap: () async {
                                   await context
                                       .read<APIServices>()
-                                      .approveReport(report.id,
-                                          report.approved ? false : true);
+                                      .approveReport(
+                                          widget.report.id,
+                                          widget.report.approved
+                                              ? false
+                                              : true);
+                                  this.widget.refresh();
                                   Navigator.pop(context);
                                 },
                                 child: Container(

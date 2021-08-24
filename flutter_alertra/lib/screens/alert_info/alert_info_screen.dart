@@ -9,23 +9,34 @@ import 'package:flutter_alertra/models/alert.dart';
 import 'package:flutter_alertra/services/APIServices.dart';
 import 'package:flutter_svg/svg.dart';
 
-class AlertInfoScreen extends StatelessWidget {
-  const AlertInfoScreen({Key? key, required this.alert}) : super(key: key);
+class AlertInfoScreen extends StatefulWidget {
+  const AlertInfoScreen({
+    Key? key,
+    required this.alert,
+  }) : super(key: key);
 
   final Alert alert;
 
   @override
+  _AlertInfoScreenState createState() => _AlertInfoScreenState();
+}
+
+class _AlertInfoScreenState extends State<AlertInfoScreen> {
+  void refresh() => setState(() {});
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(alert.priority),
+      appBar: _buildAppBar(widget.alert.priority),
       body: Padding(
         padding: EdgeInsets.all(kDefaultPadding),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildPriorityInfo(alert.priority),
+            _buildPriorityInfo(widget.alert.priority),
             SizedBox(height: kDefaultPadding),
             Text(
-              alert.content,
+              widget.alert.content,
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 21.0,
@@ -44,9 +55,9 @@ class AlertInfoScreen extends StatelessWidget {
                 ),
                 Spacer(),
                 Text(
-                  alert.time,
+                  widget.alert.time,
                   style: TextStyle(
-                    color: Colors.grey.shade800,
+                    color: Colors.grey.shade500,
                     fontSize: 15.0,
                     fontWeight: FontWeight.w400,
                   ),
@@ -54,12 +65,12 @@ class AlertInfoScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: kDefaultPadding),
-            alert.report_id == null
+            widget.alert.report_id == null
                 ? SizedBox.shrink()
                 : FutureBuilder(
                     future: context
                         .read<APIServices>()
-                        .retrieveReport(alert.report_id!),
+                        .retrieveReport(widget.alert.report_id!),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         Report report = snapshot.data as Report;
@@ -68,8 +79,10 @@ class AlertInfoScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>
-                                    ReportInfoScreen(report: report),
+                                builder: (context) => ReportInfoScreen(
+                                  report: report,
+                                  refresh: refresh,
+                                ),
                               ),
                             );
                           },
@@ -196,17 +209,17 @@ class AlertInfoScreen extends StatelessWidget {
   AppBar _buildAppBar(String priority) {
     if (priority == 'high') {
       return AppBar(
-        title: Text(alert.headline),
+        title: Text(widget.alert.headline),
         backgroundColor: kRedWarningColor,
       );
     } else if (priority == 'medium') {
       return AppBar(
-        title: Text(alert.headline),
+        title: Text(widget.alert.headline),
         backgroundColor: kOrangeWarningColor,
       );
     } else {
       return AppBar(
-        title: Text(alert.headline),
+        title: Text(widget.alert.headline),
         backgroundColor: kYellowWarningColor,
       );
     }

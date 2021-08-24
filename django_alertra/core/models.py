@@ -70,7 +70,7 @@ class ReportSearchResult(models.Model):
     url = models.URLField(max_length=200)
 
     def __str__(self):
-        return f"{self.url} ({self.report}"
+        return f"{self.url} ({self.report})"
 
 
 class Alert(models.Model):

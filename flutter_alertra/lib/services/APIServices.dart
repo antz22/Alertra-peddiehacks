@@ -35,7 +35,6 @@ class APIServices {
     List<dynamic> data = json.decode(response.body);
     List<Report> reports =
         data.map((report) => Report.fromJson(report)).toList();
-    print(data);
     return reports;
   }
 
@@ -53,7 +52,6 @@ class APIServices {
     final response = await http.post(url, headers: headers, body: body);
     var data = json.decode(response.body);
     Report report = Report.fromJson(data);
-    print(data);
     return report;
   }
 
@@ -83,7 +81,6 @@ class APIServices {
     final url = Uri.parse(API_BASE_URL + '/api/v1/get-school-data/');
     final response = await http.get(url, headers: headers);
     var data = json.decode(response.body);
-    print(data);
     return data;
   }
 
@@ -106,6 +103,7 @@ class APIServices {
         'priority': priority,
         'report_type_name': report_type_name,
         'description': description,
+        'location': location,
       });
       try {
         await http.post(url, headers: headers, body: body);
@@ -144,13 +142,20 @@ class APIServices {
       "Authorization": "Token " + token!
     };
     final url = Uri.parse(API_BASE_URL + '/api/v1/create-alert/');
-    final body = json.encode({
-      'recipient': recipients,
-      'headline': headline,
-      'content': content,
-      'priority': priority,
-      'report_id': report?.id,
-    });
+    final body = report != null
+        ? json.encode({
+            'recipient': recipients,
+            'headline': headline,
+            'content': content,
+            'priority': priority,
+            'report_id': report.id,
+          })
+        : json.encode({
+            'recipient': recipients,
+            'headline': headline,
+            'content': content,
+            'priority': priority,
+          });
     try {
       await http.post(url, headers: headers, body: body);
       return 'Success';

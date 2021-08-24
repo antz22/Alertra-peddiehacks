@@ -27,6 +27,8 @@ class _FeedPageState extends State<FeedPage> {
     };
   }
 
+  void refresh() => setState(() {});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,69 +68,77 @@ class _FeedPageState extends State<FeedPage> {
                               itemCount: alerts.length,
                               itemBuilder: (context, index) {
                                 Alert alert = alerts[index];
-                                return Row(
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          right: kDefaultPadding),
-                                      child: Container(
-                                        child:
-                                            _buildWarningIcon(alert.priority),
-                                        width: 42.0,
-                                        height: 42.0,
-                                        decoration: BoxDecoration(
-                                          color: alert.priority == 'high'
-                                              ? kRedWarningColor
-                                              : Colors.white,
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            _buildBoxShadow(
-                                                alert.priority, 'alert'),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: GestureDetector(
-                                        onTap: () => Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                AlertInfoScreen(alert: alert),
+                                return Container(
+                                  margin:
+                                      EdgeInsets.only(bottom: kDefaultPadding),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: EdgeInsets.only(
+                                            right: kDefaultPadding),
+                                        child: Container(
+                                          child:
+                                              _buildWarningIcon(alert.priority),
+                                          width: 42.0,
+                                          height: 42.0,
+                                          decoration: BoxDecoration(
+                                            color: alert.priority == 'high'
+                                                ? kRedWarningColor
+                                                : Colors.white,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              _buildBoxShadow(
+                                                  alert.priority, 'alert'),
+                                            ],
                                           ),
                                         ),
-                                        child: Container(
-                                          child: RichText(
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 4,
-                                            text: TextSpan(
-                                              text: '${alert.headline}: ',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                                fontSize: 15.0,
+                                      ),
+                                      Expanded(
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AlertInfoScreen(
+                                                        alert: alert),
                                               ),
-                                              children: [
-                                                TextSpan(
-                                                  text: alert.content,
-                                                  style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w400,
-                                                  ),
+                                            );
+                                          },
+                                          child: Container(
+                                            child: RichText(
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 4,
+                                              text: TextSpan(
+                                                text: '${alert.headline}: ',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.black,
+                                                  fontSize: 15.0,
                                                 ),
-                                              ],
+                                                children: [
+                                                  TextSpan(
+                                                    text: alert.content,
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    SizedBox(width: kDefaultPadding),
-                                    GestureDetector(
-                                      onTap: () {},
-                                      child: Icon(Icons.more_horiz_sharp,
-                                          color: kPrimaryColor),
-                                    ),
-                                  ],
+                                      SizedBox(width: kDefaultPadding),
+                                      GestureDetector(
+                                        onTap: () {},
+                                        child: Icon(Icons.more_horiz_sharp,
+                                            color: kPrimaryColor),
+                                      ),
+                                    ],
+                                  ),
                                 );
                               },
                             ),
@@ -173,15 +183,19 @@ class _FeedPageState extends State<FeedPage> {
                                       ),
                                       Expanded(
                                         child: GestureDetector(
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ReportInfoScreen(
-                                                      report: report,
-                                                      role: 'Teacher'),
-                                            ),
-                                          ),
+                                          onTap: () async {
+                                            await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ReportInfoScreen(
+                                                  report: report,
+                                                  role: 'Teacher',
+                                                  refresh: refresh,
+                                                ),
+                                              ),
+                                            );
+                                          },
                                           child: Container(
                                             child: RichText(
                                               overflow: TextOverflow.ellipsis,

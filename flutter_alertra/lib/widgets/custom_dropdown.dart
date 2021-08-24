@@ -1,14 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_alertra/constants/constants.dart';
 
 class CustomDropdown extends StatefulWidget {
-  CustomDropdown(
-      {Key? key,
-      required this.dropdownValue,
-      required this.items,
-      this.isExpanded = false})
-      : super(key: key);
+  CustomDropdown({
+    Key? key,
+    required this.updateFunction,
+    required this.dropdownValue,
+    required this.items,
+    this.isExpanded = false,
+  }) : super(key: key);
 
+  final ValueChanged<String> updateFunction;
   String dropdownValue;
   final bool isExpanded;
   final List<String> items;
@@ -28,9 +32,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
         color: kPrimaryColor,
       ),
       onChanged: (String? newValue) {
-        setState(() {
-          widget.dropdownValue = newValue!;
-        });
+        widget.updateFunction(newValue!);
       },
       items: widget.items.map((String value) {
         return DropdownMenuItem(

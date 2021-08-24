@@ -61,57 +61,9 @@ class _SchoolPageState extends State<SchoolPage> {
                   ),
                 ),
                 Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildInfoBubble(
-                      context,
-                      true,
-                      data['key_words'][0][0].toUpperCase() +
-                          data['key_words'][0].substring(1).toLowerCase(),
-                      data['sources'][0],
-                    ),
-                    data['key_words'].length > 1
-                        ? Column(
-                            children: [
-                              SizedBox(
-                                  width:
-                                      0.1 * MediaQuery.of(context).size.width),
-                              _buildInfoBubble(
-                                context,
-                                false,
-                                data['key_words'][1][0].toUpperCase() +
-                                    data['key_words'][1]
-                                        .substring(1)
-                                        .toLowerCase(),
-                                data['sources'][1],
-                              ),
-                            ],
-                          )
-                        : SizedBox.shrink(),
-                  ],
-                ),
-                data['key_words'] == 3
-                    ? Column(
-                        children: [
-                          Spacer(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _buildInfoBubble(
-                                context,
-                                false,
-                                data['key_words'][2][0].toUpperCase() +
-                                    data['key_words'][2]
-                                        .substring(1)
-                                        .toLowerCase(),
-                                data['sources'][2],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : SizedBox.shrink(),
+                _buildFirstRow(context, data),
+                data['key_words'].length == 4 ? Spacer() : SizedBox.shrink(),
+                _buildSecondRow(context, data),
                 Spacer(),
                 GestureDetector(
                   onTap: () => Navigator.push(
@@ -134,6 +86,95 @@ class _SchoolPageState extends State<SchoolPage> {
         },
       ),
     );
+  }
+
+  Row _buildFirstRow(BuildContext context, Map<String, dynamic> data) {
+    if (data['key_words'].length > 1) {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Spacer(),
+          _buildInfoBubble(
+            context,
+            true,
+            data['key_words'][0][0].toUpperCase() +
+                data['key_words'][0].substring(1).toLowerCase(),
+            data['sources'][0],
+          ),
+          Spacer(),
+          _buildInfoBubble(
+            context,
+            false,
+            data['key_words'][1][0].toUpperCase() +
+                data['key_words'][1].substring(1).toLowerCase(),
+            data['sources'][1],
+          ),
+          Spacer(),
+        ],
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          _buildInfoBubble(
+            context,
+            true,
+            data['key_words'][0][0].toUpperCase() +
+                data['key_words'][0].substring(1).toLowerCase(),
+            data['sources'][0],
+          ),
+        ],
+      );
+    }
+  }
+
+  Row _buildSecondRow(BuildContext context, Map<String, dynamic> data) {
+    switch (data['key_words'].length) {
+      case 3:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildInfoBubble(
+              context,
+              false,
+              data['key_words'][2][0].toUpperCase() +
+                  data['key_words'][2].substring(1).toLowerCase(),
+              data['sources'][2],
+            ),
+          ],
+        );
+      case 4:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Spacer(),
+            _buildInfoBubble(
+              context,
+              false,
+              data['key_words'][2][0].toUpperCase() +
+                  data['key_words'][2].substring(1).toLowerCase(),
+              data['sources'][2],
+            ),
+            Spacer(),
+            _buildInfoBubble(
+              context,
+              false,
+              data['key_words'][3][0].toUpperCase() +
+                  data['key_words'][3].substring(1).toLowerCase(),
+              data['sources'][3],
+            ),
+            Spacer(),
+          ],
+        );
+      // <= 2 or > 4
+      default:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox.shrink(),
+          ],
+        );
+    }
   }
 
   Container _buildInfoBubble(
