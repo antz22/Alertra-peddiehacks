@@ -35,14 +35,14 @@ class _LoginScreenState extends State<LoginScreen> {
       String? role = await prefs.getString('role');
       String? school = await prefs.getString('role');
       if (role == 'Teacher') {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => TeacherHomePage(),
           ),
         );
       } else {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => StudentHomePage(),

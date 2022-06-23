@@ -92,7 +92,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 GestureDetector(
                   onTap: () async {
                     await context.read<AuthenticationService>().signOut();
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => LandingPage(),
